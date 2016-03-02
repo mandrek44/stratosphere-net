@@ -1,3 +1,5 @@
+using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -14,6 +16,33 @@ namespace Stratosphere.Math
             _data = data;
             _dimensions = dimensions;
         }
+
+        /// <summary>
+        /// Creates Matrix from string representation. Supports two formats:
+        ///  1 2 3;4 5 6
+        /// or
+        ///  1,2,3\n4,5,6
+        /// </summary>
+        /// <param name="matrix">Comma or space delimited matrix string.</param>
+        public ColumnMajorMatrix(string matrix)
+        {
+            var stringRows = matrix.Split(new[] { '\n', ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            var rows = stringRows.Select(stringRow =>
+                stringRow.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray()).ToArray();
+
+            var columns = rows.First().Length;
+
+            _data = Enumerable.Range(0, columns).SelectMany(i => rows.Select(row => row[i])).ToArray();
+            _dimensions = new int[] { rows.Length, columns };
+        }
+
+        public static implicit operator ColumnMajorMatrix(string matrix) => new ColumnMajorMatrix(matrix);
+        public static ColumnMajorMatrix operator *(ColumnMajorMatrix a, double scalar) => a.Multiply(scalar);
+        public static ColumnMajorMatrix operator *(ColumnMajorMatrix a, int scalar) => a.Multiply(scalar);
+        public static ColumnMajorMatrix operator *(int scalar, ColumnMajorMatrix a) => a.Multiply(scalar);
+        public static ColumnMajorMatrix operator *(double scalar, ColumnMajorMatrix a) => a.Multiply(scalar);
 
         public ColumnMajorMatrix Multiply(double scalar)
         {

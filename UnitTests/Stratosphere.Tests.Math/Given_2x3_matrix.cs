@@ -12,7 +12,7 @@ namespace Stratosphere.Tests.Math
         {
             /* 0 2 4
                1 3 5  */
-            _matrix = new ColumnMajorMatrix(new double [] { 0, 1, 2, 3, 4, 5 }, new []{2, 3});
+            _matrix = new ColumnMajorMatrix("0 2 4;1 3 5");
         }
 
         [TestCase(0, ExpectedResult = 0)]
@@ -40,7 +40,7 @@ namespace Stratosphere.Tests.Math
         [Test]
         public void Then_can_be_multiplied_by_scalar()
         {
-            Assert.AreEqual(new ColumnMajorMatrix(new double [] {0, 2, 4, 6, 8, 10}, new [] {2, 3}), _matrix.Multiply(2));
+            Assert.AreEqual((ColumnMajorMatrix)"0 4 8;2 6 10", 2 * _matrix);
         }
     }
 }
