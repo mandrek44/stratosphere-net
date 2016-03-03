@@ -12,7 +12,7 @@ namespace Stratosphere.Tests.Math
         {
             /* 0 2 4
                1 3 5  */
-            _matrix = new ColumnMajorMatrix("0 2 4;1 3 5");
+            _matrix = ColumnMajorMatrix.Parse("0 2 4;1 3 5");
         }
 
         [TestCase(0, ExpectedResult = 0)]
@@ -41,6 +41,30 @@ namespace Stratosphere.Tests.Math
         public void Then_can_be_multiplied_by_scalar()
         {
             Assert.AreEqual((ColumnMajorMatrix)"0 4 8;2 6 10", 2 * _matrix);
+        }
+
+        [Test]
+        public void Then_can_be_transposed()
+        {
+            Assert.AreEqual((ColumnMajorMatrix)"0 1;2 3;4 5", _matrix.Transpose());
+        }
+
+        [Test]
+        public void Then_can_be_enumerated_by_columns()
+        {
+            CollectionAssert.AreEqual(new double[] {0, 1, 2, 3, 4, 5}, _matrix.EnumerateByColumns());
+        }
+
+        [Test]
+        public void Then_can_be_enumerated_by_rows()
+        {
+            CollectionAssert.AreEqual(new double[] { 0, 2, 4, 1, 3, 5}, _matrix.EnumerateByRows());
+        }
+
+        [Test]
+        public void Then_can_be_multiplied_by_other_matrix()
+        {
+            Assert.AreEqual((ColumnMajorMatrix)"20 26;26 35", _matrix.Multiply((ColumnMajorMatrix)"0 1;2 3;4 5"));
         }
     }
 }

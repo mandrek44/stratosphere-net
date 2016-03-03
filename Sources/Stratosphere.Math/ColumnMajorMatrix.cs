@@ -1,20 +1,15 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 
 namespace Stratosphere.Math
 {
-    public class ColumnMajorMatrix
+    public class ColumnMajorMatrix : Matrix
     {
-        private const double Tolerance = 0.0001;
-        private readonly double[] _data;
-        private readonly int[] _dimensions;
-
-        public ColumnMajorMatrix(double[] data, int[] dimensions)
+        private ColumnMajorMatrix(double[] data, int[] dimensions) : base(data, dimensions)
         {
-            _data = data;
-            _dimensions = dimensions;
         }
 
         /// <summary>
@@ -23,8 +18,8 @@ namespace Stratosphere.Math
         /// or
         ///  1,2,3\n4,5,6
         /// </summary>
-        /// <param name="matrix">Comma or space delimited matrix string.</param>
-        public ColumnMajorMatrix(string matrix)
+        /// <param name="matrix">Comma or space delimited other string.</param>
+        public static ColumnMajorMatrix Parse(string matrix)
         {
             var stringRows = matrix.Split(new[] { '\n', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -34,11 +29,13 @@ namespace Stratosphere.Math
 
             var columns = rows.First().Length;
 
-            _data = Enumerable.Range(0, columns).SelectMany(i => rows.Select(row => row[i])).ToArray();
-            _dimensions = new int[] { rows.Length, columns };
+            var data = Enumerable.Range(0, columns).SelectMany(i => rows.Select(row => row[i])).ToArray();
+            var dimensions = new[] { rows.Length, columns };
+
+            return new ColumnMajorMatrix(data, dimensions);
         }
 
-        public static implicit operator ColumnMajorMatrix(string matrix) => new ColumnMajorMatrix(matrix);
+        public static implicit operator ColumnMajorMatrix(string matrix) => Parse(matrix);
         public static ColumnMajorMatrix operator *(ColumnMajorMatrix a, double scalar) => a.Multiply(scalar);
         public static ColumnMajorMatrix operator *(ColumnMajorMatrix a, int scalar) => a.Multiply(scalar);
         public static ColumnMajorMatrix operator *(int scalar, ColumnMajorMatrix a) => a.Multiply(scalar);
@@ -47,79 +44,94 @@ namespace Stratosphere.Math
         public ColumnMajorMatrix Multiply(double scalar)
         {
             return new ColumnMajorMatrix(
-                _data.Select(value => value * scalar).ToArray(),
-                _dimensions.ToArray());
+                Data.Select(value => value * scalar).ToArray(),
+                Size.ToArray());
         }
 
-        public double GetByColumnIndex(int index) => _data[index];
-
-        public double GetByRowIndex(int index)
+        public ColumnMajorMatrix Multiply(Matrix other)
         {
-            if (_dimensions.Length != 2)
+            if (Size.Length != 2)
                 throw new MultiDimensionalMatrixNotSupportedException();
 
-            var row = index / _dimensions[1];
-            var column = index % _dimensions[1];
+            if (Size[1] != other.Size[0])
+                throw new InvalidOperationException("Matrix dimensions must agree");
+            
+            var resultData = new double[Size[0] * other.Size[1]];
 
-            return _data[row + column * _dimensions[0]];
+            int rowSize = Size[0];
+
+            for (int col = 0; col < other.Size[1]; ++col)
+            {
+                var columnOffset = col * other.Size[0];
+                for (int row = 0; row < Size[0]; ++row)
+                {
+                    var rowOffset = row * Size[1];
+
+                    double sum = 0;
+                    for (int i = 0; i < Size[1]; ++i)
+                    {
+                        sum += GetByRowIndex(i + rowOffset) * other.GetByColumnIndex(i + columnOffset);
+                    }
+
+                    resultData[row + col * rowSize] = sum;
+                }
+            };
+
+            return new ColumnMajorMatrix(resultData, new[] { Size[0], other.Size[1] });
         }
 
-        protected bool Equals(ColumnMajorMatrix other)
+        public override double GetByColumnIndex(int index) => Data[index];
+
+        public override IEnumerable<int> IndexesByColumns()
         {
-            if (_data.Length != other._data.Length || _dimensions.Length != other._dimensions.Length)
+            for (int i = 0; i < Data.Length; ++i)
+                yield return i;
+        }
+
+        public override double GetByRowIndex(int index)
+        {
+            if (Size.Length != 2)
+                throw new MultiDimensionalMatrixNotSupportedException();
+
+            var row = index / Size[1];
+            var column = index % Size[1];
+
+            return Data[row + column * Size[0]];
+        }
+
+        public override IEnumerable<int> IndexesByRows()
+        {
+            int h = Size[0];
+            int w = Size[1];
+
+            for (int j = 0; j < h; ++j)
+                for (int i = 0; i < w * h; i += h)
+                    yield return i + j;
+        }
+
+        protected override bool Equals(Matrix other)
+        {
+            if (Size.Length != other.Size.Length)
                 return false;
 
-            for (int i = 0; i < _dimensions.Length; i++)
+            for (int i = 0; i < Size.Length; i++)
             {
-                if (_dimensions[i] != other._dimensions[i])
+                if (Size[i] != other.Size[i])
                     return false;
             }
 
-            for (int i = 0; i < _data.Length; i++)
+            for (int i = 0; i < Data.Length; i++)
             {
-                if (System.Math.Abs(_data[i] - other._data[i]) > Tolerance)
+                if (System.Math.Abs(Data[i] - other.GetByColumnIndex(i)) > Tolerance)
                     return false;
             }
 
             return true;
         }
 
-        public override bool Equals(object obj)
+        public Matrix Transpose()
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((ColumnMajorMatrix)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                return ((_data?.GetHashCode() ?? 0) * 397) ^ (_dimensions?.GetHashCode() ?? 0);
-            }
-        }
-
-        public override string ToString()
-        {
-            var rowsStringBuilders = new StringBuilder[_dimensions[0]];
-
-            for (int i = 0; i < rowsStringBuilders.Length; ++i)
-                rowsStringBuilders[i] = new StringBuilder();
-
-            rowsStringBuilders[0].AppendLine();
-
-            for (int i = 0; i < _data.Length; ++i)
-            {
-                var stringBuilder = rowsStringBuilders[i % _dimensions[0]];
-                stringBuilder.AppendFormat("{0:0.##}", _data[i]);
-                stringBuilder.Append(' ');
-            }
-
-            for (int i = 0; i < rowsStringBuilders.Length; ++i)
-                rowsStringBuilders[i].AppendLine();
-
-            return string.Concat(rowsStringBuilders.Select(sb => sb.ToString()));
+            return new TransposedMatrix(this);
         }
     }
 }
