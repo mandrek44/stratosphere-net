@@ -53,34 +53,39 @@ namespace Stratosphere.Math
             if (Size.Length != 2)
                 throw new MultiDimensionalMatrixNotSupportedException();
 
-            if (Size[1] != other.Size[0])
+            if (Width != other.Height)
                 throw new InvalidOperationException("Matrix dimensions must agree");
-            
-            var resultData = new double[Size[0] * other.Size[1]];
 
-            int rowSize = Size[0];
+            var resultData = new double[Height * other.Width];
 
-            for (int col = 0; col < other.Size[1]; ++col)
+            for (int column = 0; column < other.Width; ++column)
             {
-                var columnOffset = col * other.Size[0];
-                for (int row = 0; row < Size[0]; ++row)
+                for (int row = 0; row < Height; ++row)
                 {
-                    var rowOffset = row * Size[1];
-
                     double sum = 0;
-                    for (int i = 0; i < Size[1]; ++i)
+                    for (int k = 0; k < Width; ++k)
                     {
-                        sum += GetByRowIndex(i + rowOffset) * other.GetByColumnIndex(i + columnOffset);
+                        sum += GetByCoordinates(row, k) * other.GetByCoordinates(k, column);
                     }
 
-                    resultData[row + col * rowSize] = sum;
+                    resultData[(column * Height) + row] = sum;
                 }
             };
 
-            return new ColumnMajorMatrix(resultData, new[] { Size[0], other.Size[1] });
+            return new ColumnMajorMatrix(resultData, new[] { Height, other.Width });
         }
 
-        public override double GetByColumnIndex(int index) => Data[index];
+        public override double GetByCoordinates(int row, int column)
+        {
+            return Data[Coordinate2ColumnIndex(row, column)];
+        }
+
+        private int Coordinate2ColumnIndex(int row, int column)
+        {
+            return (column * Height) + row;
+        }
+
+        public override double GetByColumnIndex(int columnIndex) => Data[columnIndex];
 
         public override IEnumerable<int> IndexesByColumns()
         {
@@ -88,13 +93,13 @@ namespace Stratosphere.Math
                 yield return i;
         }
 
-        public override double GetByRowIndex(int index)
+        public override double GetByRowIndex(int rowIndex)
         {
             if (Size.Length != 2)
                 throw new MultiDimensionalMatrixNotSupportedException();
 
-            var row = index / Size[1];
-            var column = index % Size[1];
+            var row = rowIndex / Size[1];
+            var column = rowIndex % Size[1];
 
             return Data[row + column * Size[0]];
         }

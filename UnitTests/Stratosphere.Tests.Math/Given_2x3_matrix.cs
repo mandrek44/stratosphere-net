@@ -66,5 +66,11 @@ namespace Stratosphere.Tests.Math
         {
             Assert.AreEqual((ColumnMajorMatrix)"20 26;26 35", _matrix.Multiply((ColumnMajorMatrix)"0 1;2 3;4 5"));
         }
+
+        [Test]
+        public void Then_can_be_multiplied_by_other_matrix_2()
+        {
+            Assert.AreEqual((ColumnMajorMatrix)"20;26", _matrix.Multiply((ColumnMajorMatrix)"0;2;4"));
+        }
     }
 }

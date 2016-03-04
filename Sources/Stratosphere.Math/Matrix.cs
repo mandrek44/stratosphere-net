@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,11 +40,17 @@ namespace Stratosphere.Math
             return IndexesByRows().Select(i => Data[i]);
         }
 
-        public abstract double GetByColumnIndex(int index);
+        public abstract double GetByColumnIndex(int columnIndex);
 
-        public abstract double GetByRowIndex(int index);
+        public abstract double GetByRowIndex(int rowIndex);
+
+        public abstract double GetByCoordinates(int row, int column);
 
         public virtual int[] Size => _dimensions;
+
+        public int Height => Size[0];
+
+        public int Width => Size[1];
 
         public override string ToString()
         {

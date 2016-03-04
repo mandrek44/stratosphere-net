@@ -13,14 +13,19 @@ namespace Stratosphere.Math
             Size = matrix.Size.Reverse().ToArray();
         }
 
-        public override double GetByColumnIndex(int index)
-        {
-            return _matrix.GetByRowIndex(index);
+        public override double GetByColumnIndex(int columnIndex)
+        {   
+            return _matrix.GetByRowIndex(columnIndex);
         }
 
-        public override double GetByRowIndex(int index)
+        public override double GetByRowIndex(int rowIndex)
         {
-            return _matrix.GetByColumnIndex(index);
+            return _matrix.GetByColumnIndex(rowIndex);
+        }
+
+        public override double GetByCoordinates(int row, int column)
+        {
+            return _matrix.GetByCoordinates(column, row);
         }
 
         public override IEnumerable<int> IndexesByColumns()
