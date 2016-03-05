@@ -1,5 +1,3 @@
-# Matrix Multiplication
-
 Today let's look at one of the most important operations in matrix-based algorithms - matrix product (multiplication of two matrices). 
 
 ## Introduction
@@ -62,8 +60,8 @@ The `Coordinate2ColumnIndex` simply calculates column-first index:
     }
     
 
-## It that all?
+## Is that all?
 
-First of all, this algorithm's computational complexity is [O(n<sup>3</sup>)](<https://en.wikipedia.org/wiki/Big_O_notation>). There are algorithms that can do [better than this](<https://en.wikipedia.org/wiki/Strassen_algorithm>), not only by reducing the complexity, but also by improving [data locality](<https://en.wikipedia.org/wiki/Locality_of_reference>) and [parallelism](<https://en.wikipedia.org/wiki/Matrix_multiplication_algorithm#Parallel_and_distributed_algorithms>). Some implementations may even use your [GPU](<https://en.wikipedia.org/wiki/CUDA>) to speed up things a little.
+This algorithm's computational complexity is [O(n<sup>3</sup>)](<https://en.wikipedia.org/wiki/Big_O_notation>). There are algorithms that can do [better than this](<https://en.wikipedia.org/wiki/Strassen_algorithm>), not only by reducing the complexity, but also by improving [data locality](<https://en.wikipedia.org/wiki/Locality_of_reference>) and [parallelism](<https://en.wikipedia.org/wiki/Matrix_multiplication_algorithm#Parallel_and_distributed_algorithms>). Some implementations may even use your [GPU](<https://en.wikipedia.org/wiki/CUDA>) to speed up things a little.
 
 But that's a topic for another time.

@@ -40,11 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ColumnMajorMatrix.cs" />
-    <Compile Include="Matrix.cs" />
-    <Compile Include="MultiDimensionalMatrixNotSupported.cs" />
+    <Compile Include="Optimization\BacktrackingLineSearch.cs" />
+    <Compile Include="Optimization\BacktrackingSteepestDescentMethod.cs" />
+    <Compile Include="Matrix\ColumnMajorMatrix.cs" />
+    <Compile Include="Matrix\Matrix.cs" />
+    <Compile Include="Matrix\MatrixTransformedMatrix.cs" />
+    <Compile Include="Matrix\MultiDimensionalMatrixNotSupportedException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TransposedMatrix.cs" />
+    <Compile Include="Matrix\ScalarTransformedMatrix.cs" />
+    <Compile Include="Optimization\SimpleSteepestDescentMethod.cs" />
+    <Compile Include="Matrix\TransposedMatrix.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

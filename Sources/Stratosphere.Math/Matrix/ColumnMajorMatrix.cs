@@ -1,14 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Stratosphere.Math
+namespace Stratosphere.Math.Matrix
 {
     public class ColumnMajorMatrix : Matrix
     {
-        private ColumnMajorMatrix(double[] data, int[] dimensions) : base(data, dimensions)
+        protected internal ColumnMajorMatrix(double[] data, int[] dimensions) : base(data, dimensions)
         {
         }
 
@@ -36,53 +35,10 @@ namespace Stratosphere.Math
         }
 
         public static implicit operator ColumnMajorMatrix(string matrix) => Parse(matrix);
-        public static ColumnMajorMatrix operator *(ColumnMajorMatrix a, double scalar) => a.Multiply(scalar);
-        public static ColumnMajorMatrix operator *(ColumnMajorMatrix a, int scalar) => a.Multiply(scalar);
-        public static ColumnMajorMatrix operator *(int scalar, ColumnMajorMatrix a) => a.Multiply(scalar);
-        public static ColumnMajorMatrix operator *(double scalar, ColumnMajorMatrix a) => a.Multiply(scalar);
-
-        public ColumnMajorMatrix Multiply(double scalar)
-        {
-            return new ColumnMajorMatrix(
-                Data.Select(value => value * scalar).ToArray(),
-                Size.ToArray());
-        }
-
-        public ColumnMajorMatrix Multiply(Matrix other)
-        {
-            if (Size.Length != 2)
-                throw new MultiDimensionalMatrixNotSupportedException();
-
-            if (Width != other.Height)
-                throw new InvalidOperationException("Matrix dimensions must agree");
-
-            var resultData = new double[Height * other.Width];
-
-            for (int column = 0; column < other.Width; ++column)
-            {
-                for (int row = 0; row < Height; ++row)
-                {
-                    double sum = 0;
-                    for (int k = 0; k < Width; ++k)
-                    {
-                        sum += GetByCoordinates(row, k) * other.GetByCoordinates(k, column);
-                    }
-
-                    resultData[(column * Height) + row] = sum;
-                }
-            };
-
-            return new ColumnMajorMatrix(resultData, new[] { Height, other.Width });
-        }
 
         public override double GetByCoordinates(int row, int column)
         {
             return Data[Coordinate2ColumnIndex(row, column)];
-        }
-
-        private int Coordinate2ColumnIndex(int row, int column)
-        {
-            return (column * Height) + row;
         }
 
         public override double GetByColumnIndex(int columnIndex) => Data[columnIndex];
@@ -134,9 +90,9 @@ namespace Stratosphere.Math
             return true;
         }
 
-        public Matrix Transpose()
+        private int Coordinate2ColumnIndex(int row, int column)
         {
-            return new TransposedMatrix(this);
+            return (column * Height) + row;
         }
     }
 }

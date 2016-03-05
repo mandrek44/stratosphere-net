@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Stratosphere.Math;
+using Stratosphere.Math.Matrix;
 
 namespace Stratosphere.Tests.Math
 {
@@ -71,6 +72,12 @@ namespace Stratosphere.Tests.Math
         public void Then_can_be_multiplied_by_other_matrix_2()
         {
             Assert.AreEqual((ColumnMajorMatrix)"20;26", _matrix.Multiply((ColumnMajorMatrix)"0;2;4"));
+        }
+
+        [Test]
+        public void Then_can_be_substracted_by_other_matrix()
+        {
+            Assert.AreEqual((ColumnMajorMatrix)"0 -2 -4;-1 -3 -5", _matrix.Substract((ColumnMajorMatrix)"0 4 8;2 6 10"));
         }
     }
 }

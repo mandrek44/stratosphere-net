@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Stratosphere.Math
+namespace Stratosphere.Math.Matrix
 {
     public class TransposedMatrix : Matrix
     {
@@ -12,6 +13,8 @@ namespace Stratosphere.Math
             _matrix = matrix;
             Size = matrix.Size.Reverse().ToArray();
         }
+
+        public override int[] Size { get; }
 
         public override double GetByColumnIndex(int columnIndex)
         {   
@@ -38,11 +41,9 @@ namespace Stratosphere.Math
             return _matrix.IndexesByColumns();
         }
 
-        public override int[] Size { get; }
-
         protected override bool Equals(Matrix other)
         {
-            return _matrix.Equals(other);
+            throw new NotImplementedException();
         }
     }
 }
