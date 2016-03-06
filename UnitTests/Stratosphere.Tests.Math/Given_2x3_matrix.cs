@@ -79,5 +79,11 @@ namespace Stratosphere.Tests.Math
         {
             Assert.AreEqual((ColumnMajorMatrix)"0 -2 -4;-1 -3 -5", _matrix.Substract((ColumnMajorMatrix)"0 4 8;2 6 10"));
         }
+
+        [Test]
+        public void Then_can_column_can_be_retrieved()
+        {
+            Assert.AreEqual((ColumnMajorMatrix)"2;3", _matrix.GetColumn(1));
+        }
     }
 }

@@ -67,6 +67,8 @@ namespace Stratosphere.Math.Matrix
 
         public abstract double GetByCoordinates(int row, int column);
 
+        public Matrix GetColumn(int column) => new ColumnFilteredMatrix(this, column);
+
         public virtual int[] Size => _dimensions;
 
         public int Height => Size[0];
@@ -137,6 +139,52 @@ namespace Stratosphere.Math.Matrix
             {
                 return ((Data?.GetHashCode() ?? 0) * 397) ^ (_dimensions?.GetHashCode() ?? 0);
             }
+        }
+    }
+
+    public class ColumnFilteredMatrix : Matrix
+    {
+        private readonly Matrix _matrix;
+        private readonly int _column;
+
+        public ColumnFilteredMatrix(Matrix matrix, int column) : base(matrix)
+        {
+            _matrix = matrix;
+            _column = column;
+
+            Size = new int[] { matrix.Height, 1 };
+        }
+
+        public override IEnumerable<int> IndexesByRows()
+        {
+            return Enumerable.Range(0, Height);
+        }
+
+        public override IEnumerable<int> IndexesByColumns()
+        {
+            return Enumerable.Range(0, Height);
+        }
+
+        public override double GetByColumnIndex(int columnIndex)
+        {
+            return _matrix.GetByColumnIndex(_column * Height + columnIndex);
+        }
+
+        public override double GetByRowIndex(int rowIndex)
+        {
+            return _matrix.GetByColumnIndex(_column * Height + rowIndex);
+        }
+
+        public override double GetByCoordinates(int row, int column)
+        {
+            return _matrix.GetByCoordinates(row, _column);
+        }
+
+        public override int[] Size { get; }
+
+        protected override bool Equals(Matrix other)
+        {
+            throw new NotImplementedException();
         }
     }
 }

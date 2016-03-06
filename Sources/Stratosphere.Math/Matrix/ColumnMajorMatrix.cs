@@ -20,10 +20,12 @@ namespace Stratosphere.Math.Matrix
         /// <param name="matrix">Comma or space delimited other string.</param>
         public static ColumnMajorMatrix Parse(string matrix)
         {
-            var stringRows = matrix.Split(new[] { '\n', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var stringRows = matrix.Trim().Split(new[] { '\n', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
-            var rows = stringRows.Select(stringRow =>
+            var rows = stringRows
+                .Select(stringRow =>
                 stringRow.Split(new[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(s => s.Trim()).Where(s => !string.IsNullOrEmpty(s))
                 .Select(s => double.Parse(s, CultureInfo.InvariantCulture)).ToArray()).ToArray();
 
             var columns = rows.First().Length;
