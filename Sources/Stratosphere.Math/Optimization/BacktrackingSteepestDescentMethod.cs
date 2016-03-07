@@ -8,7 +8,6 @@ namespace Stratosphere.Math.Optimization
 
         public static Matrix.Matrix Find(Func<Matrix.Matrix, double> f, Func<Matrix.Matrix, Matrix.Matrix> df, Matrix.Matrix initial, double alpha, int maxIterations)
         {
-            
             var x = initial;
             var fx = f(x);
             for (int i = 0; i < maxIterations; ++i)

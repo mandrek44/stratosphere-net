@@ -81,9 +81,15 @@ namespace Stratosphere.Tests.Math
         }
 
         [Test]
-        public void Then_can_column_can_be_retrieved()
+        public void Then_column_can_be_retrieved()
         {
             Assert.AreEqual((ColumnMajorMatrix)"2;3", _matrix.GetColumn(1));
+        }
+
+        [Test]
+        public void Then_column_can_be_added()
+        {
+            Assert.AreEqual(ColumnMajorMatrix.Parse("0 2 4 6;1 3 5 7"), new ColumnsConcatMatrix(_matrix, ColumnMajorMatrix.Parse("6;7")));
         }
     }
 }

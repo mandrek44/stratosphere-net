@@ -9,7 +9,7 @@ namespace Stratosphere.Math.Matrix
         private readonly Matrix _matrix;
         private readonly Func<double, double> _transformation;
 
-        public ScalarTransformedMatrix(Matrix matrix, Func<double, double> transformation ) : base(matrix)
+        public ScalarTransformedMatrix(Matrix matrix, Func<double, double> transformation ) : base(matrix.Size)
         {
             _matrix = matrix;
             _transformation = transformation;

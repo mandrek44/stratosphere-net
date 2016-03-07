@@ -4,7 +4,7 @@ namespace Stratosphere.Math.Optimization
 {
     public class BacktrackingLineSearch
     {
-        private const double K = 0.25;
+        private const double K = 0.125;
         private const double C = 0.01;
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Stratosphere.Math.Optimization
             var x0 = x_start;
             var fx0 = f(x0);
 
-            double alpha = 1;
+            double alpha = 0.1;
             int i = 0;
 
             while (!Armijo(f, x0, fx0, dfx_start, p, alpha) && i < 32)
@@ -34,7 +34,7 @@ namespace Stratosphere.Math.Optimization
 
         private static bool Armijo(Func<Matrix.Matrix, double> f, Matrix.Matrix x0, double fx0, Matrix.Matrix dfx0, Matrix.Matrix p, double alpha)
         {
-            return f(x0 + alpha * p) <= fx0 + C * alpha * ((dfx0.Transpose() * p)[0]);
+            return f(x0 + alpha * p) <= fx0 + C * alpha * (dfx0.T * p);
         }
     }
 }
