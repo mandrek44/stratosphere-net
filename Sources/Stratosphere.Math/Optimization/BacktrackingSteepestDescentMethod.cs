@@ -13,9 +13,12 @@ namespace Stratosphere.Math.Optimization
             for (int i = 0; i < maxIterations; ++i)
             {
                 var dfx = df(x);
+                if (dfx.Length < _epsilon)
+                    return x;
+
                 var p = -dfx/dfx.Length;
 
-                var x2 = BacktrackingLineSearch.Find(f, p, x, dfx);
+                var x2 = BacktrackingLineSearch.Find(f, p, x, dfx).Evaluate();
                 
                 var fx2 = f(x2);
                 if (fx - fx2 < _epsilon)

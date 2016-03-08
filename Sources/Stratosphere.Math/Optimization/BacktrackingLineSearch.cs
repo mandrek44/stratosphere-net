@@ -20,7 +20,7 @@ namespace Stratosphere.Math.Optimization
             var x0 = x_start;
             var fx0 = f(x0);
 
-            double alpha = 0.1;
+            double alpha = 1;
             int i = 0;
 
             while (!Armijo(f, x0, fx0, dfx_start, p, alpha) && i < 32)

@@ -75,7 +75,7 @@ namespace Stratosphere.Math.Matrix
         public Matrix Concat(Matrix matrix) => new ColumnsConcatMatrix(this, matrix);
         public double Sum() => EnumerateByColumns().Sum();
 
-        public double Length => System.Math.Sqrt(Data.Sum(v => v * v));
+        public double Length => System.Math.Sqrt(EnumerateByColumns().Sum(v => v * v));
 
         public double this[int row, int column = 0] => GetByCoordinates(row, column);
 
@@ -139,6 +139,18 @@ namespace Stratosphere.Math.Matrix
             }
 
             return new ColumnMajorMatrix(maxes, dimension == 0 ? new[] { 1, _dimensions[1] } : new[] { _dimensions[0], 1 });
+        }
+
+        public Matrix Evaluate()
+        {
+            var result = new double[Size.Product()];
+            int i = 0;
+            foreach (var value in EnumerateByColumns())
+            {
+                result[i++] = value;
+            }
+
+            return new ColumnMajorMatrix(result, Size.ToArray());
         }
 
         public Matrix Max(int dimension = 0)

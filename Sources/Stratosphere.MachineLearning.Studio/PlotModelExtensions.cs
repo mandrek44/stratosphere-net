@@ -12,13 +12,13 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var scatterSeries = new ScatterSeries() { MarkerType = marker };
             for (int row = 0; row < x.Height; ++row)
-                scatterSeries.Points.Add(new ScatterPoint(x[row, 0], y[row, 1], 5, 1));
+                scatterSeries.Points.Add(new ScatterPoint(x[row, 0], y[row, 0], 5, 1));
 
             
             plot.Series.Add(scatterSeries);
         }
 
-        public static void Function(this PlotModel plot, Matrix X, Matrix y, Func<double, double> f)
+        public static LineSeries Function(this PlotModel plot, Matrix X, Matrix y, Func<double, double> f)
         {
             double maxX = X.Max();
             double minX = X.Min();
@@ -37,9 +37,10 @@ namespace Stratosphere.MachineLearning.Studio
 
 
             lineSeries.Color = OxyPalettes.Hot(3).Colors.First();
-            lineSeries.Title = "Regression";
 
             plot.Series.Add(lineSeries);
+
+            return lineSeries;
         }
 
         public static void Line(this PlotModel plot, Matrix X, Matrix y, Matrix lineCoefficients)
