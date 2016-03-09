@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Matrix\ColumnsConcatMatrix.cs" />
     <Compile Include="Utils\ArrayExtension.cs" />
     <Compile Include="Matrix\ColumnFilteredMatrix.cs" />
     <Compile Include="Optimization\BacktrackingLineSearch.cs" />
