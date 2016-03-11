@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -7,11 +6,11 @@ namespace Stratosphere.Math.Matrix
 {
     public class ColumnMajorMatrix : Matrix
     {
-        private double[] Data;
+        private readonly double[] _data;
 
         protected internal ColumnMajorMatrix(double[] data, int[] dimensions) : base(dimensions)
         {
-            Data = data;
+            _data = data;
         }
 
         /// <summary>
@@ -43,10 +42,10 @@ namespace Stratosphere.Math.Matrix
 
         public override double GetByCoordinates(int row, int column)
         {
-            return Data[Coordinate2ColumnIndex(row, column)];
+            return _data[Coordinate2ColumnIndex(row, column)];
         }
 
-        public override double Get(int index) => Data[index];
+        public override double Get(int index) => _data[index];
         
         private int Coordinate2ColumnIndex(int row, int column)
         {
@@ -57,7 +56,7 @@ namespace Stratosphere.Math.Matrix
         {
             unchecked
             {
-                return ((Data?.GetHashCode() ?? 0) * 397) ^ (Size?.GetHashCode() ?? 0);
+                return ((_data?.GetHashCode() ?? 0) * 397) ^ (Size?.GetHashCode() ?? 0);
             }
         }
     }
