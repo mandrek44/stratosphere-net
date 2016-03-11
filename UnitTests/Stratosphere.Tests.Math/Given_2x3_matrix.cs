@@ -65,19 +65,19 @@ namespace Stratosphere.Tests.Math
         [Test]
         public void Then_can_be_multiplied_by_other_matrix()
         {
-            Assert.AreEqual((ColumnMajorMatrix)"20 26;26 35", _matrix.Multiply((ColumnMajorMatrix)"0 1;2 3;4 5"));
+            Assert.AreEqual((ColumnMajorMatrix)"20 26;26 35", _matrix * "0 1;2 3;4 5");
         }
 
         [Test]
         public void Then_can_be_multiplied_by_other_matrix_2()
         {
-            Assert.AreEqual((ColumnMajorMatrix)"20;26", _matrix.Multiply((ColumnMajorMatrix)"0;2;4"));
+            Assert.AreEqual((ColumnMajorMatrix)"20;26", _matrix.Multiply("0;2;4"));
         }
 
         [Test]
         public void Then_can_be_substracted_by_other_matrix()
         {
-            Assert.AreEqual((ColumnMajorMatrix)"0 -2 -4;-1 -3 -5", _matrix.Substract((ColumnMajorMatrix)"0 4 8;2 6 10"));
+            Assert.AreEqual((ColumnMajorMatrix)"0 -2 -4;-1 -3 -5", _matrix.Substract("0 4 8;2 6 10"));
         }
 
         [Test]
@@ -89,7 +89,31 @@ namespace Stratosphere.Tests.Math
         [Test]
         public void Then_column_can_be_added()
         {
-            Assert.AreEqual(ColumnMajorMatrix.Parse("0 2 4 6;1 3 5 7"), new ColumnsConcatMatrix(_matrix, ColumnMajorMatrix.Parse("6;7")));
+            Assert.AreEqual((ColumnMajorMatrix)"0 2 4 6;1 3 5 7", _matrix.Concat("6;7"));
+        }
+
+        [Test]
+        public void Then_max_per_column_can_be_calculated()
+        {
+            Assert.AreEqual((ColumnMajorMatrix)"1 3 5", _matrix.Max(0));
+        }
+
+        [Test]
+        public void Then_max_per_row_can_be_calculated()
+        {
+            Assert.AreEqual((ColumnMajorMatrix)"4;5", _matrix.Max(1));
+        }
+
+        [Test]
+        public void Then_min_per_column_can_be_calculated()
+        {
+            Assert.AreEqual((ColumnMajorMatrix)"0 2 4", _matrix.Min(0));
+        }
+
+        [Test]
+        public void Then_min_per_row_can_be_calculated()
+        {
+            Assert.AreEqual((ColumnMajorMatrix)"0;1", _matrix.Min(1));
         }
     }
 }

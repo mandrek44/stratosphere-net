@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Stratosphere.Math.Matrix
 {
+    // TODO: If RowMajorMatrix (or any other version) is implemented, this will need to change as it assumes the indexes are Column Major
     public abstract class Matrix
     {
         protected const double Tolerance = 0.0001;
@@ -32,11 +33,12 @@ namespace Stratosphere.Math.Matrix
             _dimensions = template._dimensions;
         }
 
+        public static implicit operator Matrix(string matrix) => ColumnMajorMatrix.Parse(matrix);
+
         public abstract IEnumerable<int> IndexesByRows();
 
         public abstract IEnumerable<int> IndexesByColumns();
-
-        // TODO: If RowMajorMatrix (or any other version) is implemented, this will need to change as it assumes the indexes are Column Major
+        
         public IEnumerable<double> EnumerateByColumns() => IndexesByColumns().Select(GetByColumnIndex);
 
         public IEnumerable<double> EnumerateByRows() => IndexesByRows().Select(GetByColumnIndex);
