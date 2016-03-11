@@ -10,7 +10,6 @@ namespace Stratosphere.Math.Matrix
     {
         protected const double Tolerance = 0.0001;
         private readonly int[] _dimensions;
-        protected double[] Data { get; }
 
         protected Matrix()
         {
@@ -21,27 +20,24 @@ namespace Stratosphere.Math.Matrix
             _dimensions = dimensions;
         }
 
-        protected Matrix(double[] data, int[] dimensions)
-        {
-            Data = data;
-            _dimensions = dimensions;
-        }
-
-        protected Matrix(Matrix template)
-        {
-            Data = template.Data;
-            _dimensions = template._dimensions;
-        }
-
         public static implicit operator Matrix(string matrix) => ColumnMajorMatrix.Parse(matrix);
 
-        public abstract IEnumerable<int> IndexesByRows();
+        public IEnumerable<int> IndexesByRows()
+        {
+            for (int j = 0; j < Height; ++j)
+                for (int i = 0; i < Width * Height; i += Height)
+                    yield return i + j;
+        }
 
-        public abstract IEnumerable<int> IndexesByColumns();
-        
-        public IEnumerable<double> EnumerateByColumns() => IndexesByColumns().Select(GetByColumnIndex);
+        public IEnumerable<int> IndexesByColumns()
+        {
+            for (int i = 0; i < Size.Product(); ++i)
+                yield return i;
+        }
 
-        public IEnumerable<double> EnumerateByRows() => IndexesByRows().Select(GetByColumnIndex);
+        public IEnumerable<double> EnumerateByColumns() => IndexesByColumns().Select(Get);
+
+        public IEnumerable<double> EnumerateByRows() => IndexesByRows().Select(Get);
 
         public virtual Matrix Multiply(Matrix other) => Multiply(this, other);
         public virtual Matrix Multiply(double scalar) => Map(v => v * scalar);
@@ -81,9 +77,7 @@ namespace Stratosphere.Math.Matrix
 
         public double this[int row, int column = 0] => GetByCoordinates(row, column);
 
-        public abstract double GetByColumnIndex(int columnIndex);
-
-        public abstract double GetByRowIndex(int rowIndex);
+        public abstract double Get(int index);
 
         public abstract double GetByCoordinates(int row, int column);
 
@@ -136,7 +130,7 @@ namespace Stratosphere.Math.Matrix
                 for (int row = 0; row < _dimensions[0]; ++row, ++i)
                 {
                     var maxIndex = dimension == 0 ? col : row;
-                    maxes[maxIndex] += GetByColumnIndex(i);
+                    maxes[maxIndex] += Get(i);
                 }
             }
 
@@ -176,7 +170,7 @@ namespace Stratosphere.Math.Matrix
                 for (int row = 0; row < _dimensions[0]; ++row, ++i)
                 {
                     var maxIndex = dimension == 0 ? col : row;
-                    var value = GetByColumnIndex(i);
+                    var value = Get(i);
                     if (value > maxes[maxIndex])
                         maxes[maxIndex] = value;
                 }
@@ -206,7 +200,7 @@ namespace Stratosphere.Math.Matrix
                 for (int row = 0; row < _dimensions[0]; ++row, ++i)
                 {
                     var maxIndex = dimension == 0 ? col : row;
-                    var value = GetByColumnIndex(i);
+                    var value = Get(i);
                     if (value < maxes[maxIndex])
                         maxes[maxIndex] = value;
                 }
@@ -235,7 +229,27 @@ namespace Stratosphere.Math.Matrix
             return builder.ToString();
         }
 
-        protected abstract bool Equals(Matrix other);
+        public bool Equals(Matrix other)
+        {
+            if (Size.Length != other.Size.Length)
+                return false;
+
+            if (Size.Where((t, i) => t != other.Size[i]).Any())
+            {
+                return false;
+            }
+
+            var thisValues = EnumerateByColumns().GetEnumerator();
+            var otherValues = other.EnumerateByColumns().GetEnumerator();
+
+            while (thisValues.MoveNext() && otherValues.MoveNext())
+            {
+                if (thisValues.Current != otherValues.Current)
+                    return false;
+            }
+
+            return true;
+        }
 
         public override bool Equals(object obj)
         {
@@ -250,7 +264,7 @@ namespace Stratosphere.Math.Matrix
         {
             unchecked
             {
-                return ((Data?.GetHashCode() ?? 0) * 397) ^ (_dimensions?.GetHashCode() ?? 0);
+                return (_dimensions?.GetHashCode() ?? 0);
             }
         }
 

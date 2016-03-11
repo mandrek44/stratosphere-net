@@ -7,8 +7,11 @@ namespace Stratosphere.Math.Matrix
 {
     public class ColumnMajorMatrix : Matrix
     {
-        protected internal ColumnMajorMatrix(double[] data, int[] dimensions) : base(data, dimensions)
+        private double[] Data;
+
+        protected internal ColumnMajorMatrix(double[] data, int[] dimensions) : base(dimensions)
         {
+            Data = data;
         }
 
         /// <summary>
@@ -43,58 +46,19 @@ namespace Stratosphere.Math.Matrix
             return Data[Coordinate2ColumnIndex(row, column)];
         }
 
-        public override double GetByColumnIndex(int columnIndex) => Data[columnIndex];
-
-        public override IEnumerable<int> IndexesByColumns()
-        {
-            for (int i = 0; i < Data.Length; ++i)
-                yield return i;
-        }
-
-        public override double GetByRowIndex(int rowIndex)
-        {
-            if (Size.Length != 2)
-                throw new MultiDimensionalMatrixNotSupportedException();
-
-            var row = rowIndex / Size[1];
-            var column = rowIndex % Size[1];
-
-            return Data[row + column * Size[0]];
-        }
-
-        public override IEnumerable<int> IndexesByRows()
-        {
-            int h = Size[0];
-            int w = Size[1];
-
-            for (int j = 0; j < h; ++j)
-                for (int i = 0; i < w * h; i += h)
-                    yield return i + j;
-        }
-
-        protected override bool Equals(Matrix other)
-        {
-            if (Size.Length != other.Size.Length)
-                return false;
-
-            for (int i = 0; i < Size.Length; i++)
-            {
-                if (Size[i] != other.Size[i])
-                    return false;
-            }
-
-            for (int i = 0; i < Data.Length; i++)
-            {
-                if (System.Math.Abs(Data[i] - other.GetByColumnIndex(i)) > Tolerance)
-                    return false;
-            }
-
-            return true;
-        }
-
+        public override double Get(int index) => Data[index];
+        
         private int Coordinate2ColumnIndex(int row, int column)
         {
             return (column * Height) + row;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((Data?.GetHashCode() ?? 0) * 397) ^ (Size?.GetHashCode() ?? 0);
+            }
         }
     }
 }

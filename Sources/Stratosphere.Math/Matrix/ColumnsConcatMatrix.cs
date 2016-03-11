@@ -22,19 +22,13 @@ namespace Stratosphere.Math.Matrix
 
         public override int[] Size { get; }
 
-        public override IEnumerable<int> IndexesByRows() => IndexesByColumns();
-        
-        public override IEnumerable<int> IndexesByColumns() => Enumerable.Range(0, Size.Product());
-
-        public override double GetByColumnIndex(int columnIndex)
+        public override double Get(int index)
         {
-            if (columnIndex < _a.Size.Product())
-                return _a.GetByColumnIndex(columnIndex);
+            if (index < _a.Size.Product())
+                return _a.Get(index);
             else
-                return _b.GetByColumnIndex(columnIndex - _a.Size.Product());
+                return _b.Get(index - _a.Size.Product());
         }
-
-        public override double GetByRowIndex(int rowIndex) => GetByColumnIndex(rowIndex);
 
         public override double GetByCoordinates(int row, int column)
         {
@@ -42,11 +36,6 @@ namespace Stratosphere.Math.Matrix
                 return _a.GetByCoordinates(row, column);
             else
                 return _b.GetByCoordinates(row, column - _a.Width);
-        }
-
-        protected override bool Equals(Matrix other)
-        {
-            throw new NotImplementedException();
         }
     }
 }

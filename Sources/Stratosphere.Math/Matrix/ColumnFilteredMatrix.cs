@@ -15,34 +15,14 @@ namespace Stratosphere.Math.Matrix
             _column = column;
         }
 
-        public override IEnumerable<int> IndexesByRows()
+        public override double Get(int index)
         {
-            return Enumerable.Range(0, Height);
-        }
-
-        public override IEnumerable<int> IndexesByColumns()
-        {
-            return Enumerable.Range(0, Height);
-        }
-
-        public override double GetByColumnIndex(int columnIndex)
-        {
-            return _matrix.GetByColumnIndex(_column * Height + columnIndex);
-        }
-
-        public override double GetByRowIndex(int rowIndex)
-        {
-            return _matrix.GetByColumnIndex(_column * Height + rowIndex);
+            return _matrix.Get(_column * Height + index);
         }
 
         public override double GetByCoordinates(int row, int column)
         {
             return _matrix.GetByCoordinates(row, _column);
-        }
-        
-        protected override bool Equals(Matrix other)
-        {
-            throw new NotImplementedException();
         }
     }
 }

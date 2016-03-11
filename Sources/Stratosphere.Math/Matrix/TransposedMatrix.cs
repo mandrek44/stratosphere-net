@@ -8,7 +8,7 @@ namespace Stratosphere.Math.Matrix
     {
         private readonly Matrix _matrix;
 
-        public TransposedMatrix(Matrix matrix) : base(matrix)
+        public TransposedMatrix(Matrix matrix)
         {
             _matrix = matrix;
             Size = matrix.Size.Reverse().ToArray();
@@ -16,34 +16,17 @@ namespace Stratosphere.Math.Matrix
 
         public override int[] Size { get; }
 
-        public override double GetByColumnIndex(int columnIndex)
-        {   
-            return _matrix.GetByRowIndex(columnIndex);
-        }
-
-        public override double GetByRowIndex(int rowIndex)
+        public override double Get(int index)
         {
-            return _matrix.GetByColumnIndex(rowIndex);
+            var row = index%Height;
+            var col = index/Height;
+
+            return GetByCoordinates(row, col);
         }
 
         public override double GetByCoordinates(int row, int column)
         {
             return _matrix.GetByCoordinates(column, row);
-        }
-
-        public override IEnumerable<int> IndexesByColumns()
-        {
-            return _matrix.IndexesByRows();
-        }
-
-        public override IEnumerable<int> IndexesByRows()
-        {
-            return _matrix.IndexesByColumns();
-        }
-
-        protected override bool Equals(Matrix other)
-        {
-            throw new NotImplementedException();
         }
     }
 }

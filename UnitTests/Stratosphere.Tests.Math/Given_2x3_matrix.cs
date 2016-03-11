@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Linq;
+using NUnit.Framework;
 using Stratosphere.Math;
 using Stratosphere.Math.Matrix;
 
@@ -24,7 +25,7 @@ namespace Stratosphere.Tests.Math
         [TestCase(5, ExpectedResult = 5)]
         public double Then_can_be_accessed_by_column_index(int columnIndex)
         {
-            return _matrix.GetByColumnIndex(columnIndex);
+            return _matrix.Get(columnIndex);
         }
 
         [TestCase(0, ExpectedResult = 0)]
@@ -35,7 +36,7 @@ namespace Stratosphere.Tests.Math
         [TestCase(5, ExpectedResult = 5)]
         public double Then_can_be_accessed_by_row_index(int rowIndex)
         {
-            return _matrix.GetByRowIndex(rowIndex);
+            return _matrix.EnumerateByRows().Skip(rowIndex).First();
         }
 
         [Test]
