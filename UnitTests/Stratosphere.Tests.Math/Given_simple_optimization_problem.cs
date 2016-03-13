@@ -1,6 +1,5 @@
 ﻿using NUnit.Framework;
 using Stratosphere.Math;
-using Stratosphere.Math.Matrix;
 using Stratosphere.Math.Optimization;
 using static System.Math;
 

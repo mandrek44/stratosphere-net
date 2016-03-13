@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using Stratosphere.Math;
-using Stratosphere.Math.Matrix;
 
 namespace Stratosphere.Tests.Math
 {

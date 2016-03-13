@@ -3,8 +3,9 @@ using System.IO;
 using System.Windows.Forms;
 using OxyPlot;
 using OxyPlot.Axes;
+using OxyPlot.Series;
 using OxyPlot.WindowsForms;
-using Stratosphere.Math.Matrix;
+using Stratosphere.Math;
 using Stratosphere.Math.Optimization;
 
 namespace Stratosphere.MachineLearning.Studio
@@ -16,8 +17,57 @@ namespace Stratosphere.MachineLearning.Studio
             InitializeComponent();
             Size = new Size(800, 600);
 
+            //var model = RegressionTests();
+            var model = BananaFunction();
+
+            var plotView = new PlotView();
+            plotView.Dock = DockStyle.Fill;
+            plotView.Location = new Point(0, 0);
+            plotView.Margin = new Padding(0);
+            plotView.Name = "plotView";
+            plotView.Model = model;
+
+            Controls.Add(plotView);
+        }
+
+        private static PlotModel BananaFunction()
+        {
+            var model = new PlotModel();
+
+            var map = new HeatMapSeries { X0 = -2.0, X1 = 2.0, Y0 = -1, Y1 = 3, Data = new double[40, 40], Interpolate = false, RenderMethod = HeatMapRenderMethod.Rectangles };
+
+            double step = 0.05;
+            int xi1 = 0;
+            int xi2 = 0;
+
+            map.Data = new double[(int)((map.X1 - map.X0)/step) + 1, (int)((map.Y1 - map.Y0) / step) + 1];
+            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.HueDistinct(1500), HighColor = OxyColors.Gray, LowColor = OxyColors.Black });
+
+
+            for (double x1 = map.X0; x1 < map.X1; x1 += step)
+            {
+                xi2 = 0;
+                for (double x2 = map.Y0; x2 < map.Y1; x2 += step)
+                {
+                    var a = 100*(x2 - (x1*x1));
+                    var b = 1 - x1;
+
+                    map.Data[xi1, xi2++] = a*a + b*b;
+                }
+
+                xi1++;
+            }
+
+            model.Series.Add(map);
+
+            return model;
+
+        }
+
+        private static PlotModel RegressionTests()
+        {
             var planetsData = ColumnMajorMatrix.Parse(File.ReadAllText(@"DataSets\swapi_planets_filtered.txt"));
-            var model = new PlotModel { Title = "Star Wars Planets (diameter vs period)" };
+            var model = new PlotModel {Title = "Star Wars Planets (diameter vs period)"};
 
             var diameters = planetsData.GetColumn(0)*0.001;
             var periods = planetsData.GetColumn(1)*0.1;
@@ -28,16 +78,8 @@ namespace Stratosphere.MachineLearning.Studio
             PolynomialRegression(diameters, y, model);
             LinearRegression(diameters, y, model);
 
-            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3) });
-
-            var plotView = new PlotView();
-            plotView.Dock = DockStyle.Fill;
-            plotView.Location = new Point(0, 0);
-            plotView.Margin = new Padding(0);
-            plotView.Name = "plotView";
-            plotView.Model = model;
-
-            Controls.Add(plotView);
+            model.Axes.Add(new LinearColorAxis {Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3)});
+            return model;
         }
 
         private static void PolynomialRegression(Matrix diameters, Matrix y, PlotModel model)

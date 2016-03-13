@@ -6,7 +6,7 @@ namespace Stratosphere.Math.Optimization
     {
         private static double _epsilon = 0.00001;
 
-        public static Matrix.Matrix Find(Func<Matrix.Matrix, double> f, Func<Matrix.Matrix, Matrix.Matrix> df, Matrix.Matrix initial, double alpha, int maxIterations)
+        public static Math.Matrix Find(Func<Math.Matrix, double> f, Func<Math.Matrix, Math.Matrix> df, Math.Matrix initial, double alpha, int maxIterations)
         {
             var x = initial;
             var fx = f(x);

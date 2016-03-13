@@ -1,6 +1,6 @@
 using System;
 
-namespace Stratosphere.Math.Matrix
+namespace Stratosphere.Math
 {
     [Serializable]
     public class MultiDimensionalMatrixNotSupportedException : NotSupportedException

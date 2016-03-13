@@ -1,4 +1,4 @@
-namespace Stratosphere.Math.Matrix
+namespace Stratosphere.Math
 {
     public static class ArrayExtension
     {

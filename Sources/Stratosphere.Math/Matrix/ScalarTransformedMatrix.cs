@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Stratosphere.Math.Matrix
+namespace Stratosphere.Math
 {
     public class ScalarTransformedMatrix : Matrix
     {

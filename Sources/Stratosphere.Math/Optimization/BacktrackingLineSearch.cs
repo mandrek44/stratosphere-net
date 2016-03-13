@@ -15,7 +15,7 @@ namespace Stratosphere.Math.Optimization
         /// <param name="x_start">Starting point.</param>
         /// <param name="dfx_start">Gradient value at point x_start.</param>
         /// <returns>Value of x for which f(x) is close to local minimum.</returns>
-        public static Matrix.Matrix Find(Func<Matrix.Matrix, double> f, Matrix.Matrix p, Matrix.Matrix x_start, Matrix.Matrix dfx_start)
+        public static Math.Matrix Find(Func<Math.Matrix, double> f, Math.Matrix p, Math.Matrix x_start, Math.Matrix dfx_start)
         {
             var x0 = x_start;
             var fx0 = f(x0);
@@ -32,7 +32,7 @@ namespace Stratosphere.Math.Optimization
             return x0 + alpha * p;
         }
 
-        private static bool Armijo(Func<Matrix.Matrix, double> f, Matrix.Matrix x0, double fx0, Matrix.Matrix dfx0, Matrix.Matrix p, double alpha)
+        private static bool Armijo(Func<Math.Matrix, double> f, Math.Matrix x0, double fx0, Math.Matrix dfx0, Math.Matrix p, double alpha)
         {
             return f(x0 + alpha * p) <= fx0 + C * alpha * (dfx0.T * p);
         }

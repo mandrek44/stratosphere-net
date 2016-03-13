@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Stratosphere.Math.Matrix
+namespace Stratosphere.Math
 {
     public class ColumnFilteredMatrix : Matrix
     {

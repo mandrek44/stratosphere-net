@@ -2,7 +2,7 @@
 using System.Linq;
 using OxyPlot;
 using OxyPlot.Series;
-using Stratosphere.Math.Matrix;
+using Stratosphere.Math;
 
 namespace Stratosphere.MachineLearning.Studio
 {

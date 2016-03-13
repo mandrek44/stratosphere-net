@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 
-namespace Stratosphere.Math.Matrix
+namespace Stratosphere.Math
 {
     public class ColumnMajorMatrix : Matrix
     {
