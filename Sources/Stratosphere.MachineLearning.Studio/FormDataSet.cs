@@ -52,13 +52,37 @@ namespace Stratosphere.MachineLearning.Studio
                     var a = 100*(x2 - (x1*x1));
                     var b = 1 - x1;
 
-                    map.Data[xi1, xi2++] = a*a + b*b;
+                    map.Data[xi1, xi2++] = System.Math.Log(a*a + b*b);
                 }
 
                 xi1++;
             }
 
             model.Series.Add(map);
+
+
+            var findMethod = new SimpleSteepestDescentMethod(trackProgres: true);
+                findMethod.Find(x =>
+                {
+                    var a = 100*(x[1] - (x[0]*x[0]));
+                    var b = 1 - x[0];
+
+                    return a*a + b*b;
+                }, x =>
+                {
+                    var dx = x[0]*(400*x[0]*x[0] + 2) - 400*x[0]*x[1] - 2;
+                    var dy = 200*x[1] - 200*x[0]*x[0];
+                    return Matrix.Vector(dx, dy);
+                }, "-2;0", 0.001);
+
+
+            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross};
+            foreach (var historyX in findMethod.History)
+            {
+                historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: -40));
+            }
+
+            model.Series.Add(historyPoints);
 
             return model;
 
