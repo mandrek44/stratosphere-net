@@ -17,8 +17,8 @@ namespace Stratosphere.MachineLearning.Studio
             InitializeComponent();
             Size = new Size(800, 600);
 
-            //var model = RegressionTests();
-            var model = BananaFunction();
+            var model = RegressionTests();
+            //var model = PlotBananaFunction();
 
             var plotView = new PlotView();
             plotView.Dock = DockStyle.Fill;
@@ -30,7 +30,22 @@ namespace Stratosphere.MachineLearning.Studio
             Controls.Add(plotView);
         }
 
-        private static PlotModel BananaFunction()
+        private static double BananaFunction(Matrix x)
+        {
+            var a = 100 * (x[1] - (x[0] * x[0]));
+            var b = 1 - x[0];
+
+            return a * a + b * b;
+        }
+
+        private static Matrix BananaFunctionDerivatives(Matrix x)
+        {
+            var dx = x[0] * (400 * x[0] * x[0] + 2) - 400 * x[0] * x[1] - 2;
+            var dy = 200 * x[1] - 200 * x[0] * x[0];
+            return Matrix.Vector(dx, dy);
+        }
+
+        private static PlotModel PlotBananaFunction()
         {
             var model = new PlotModel();
 
@@ -49,10 +64,7 @@ namespace Stratosphere.MachineLearning.Studio
                 xi2 = 0;
                 for (double x2 = map.Y0; x2 < map.Y1; x2 += step)
                 {
-                    var a = 100*(x2 - (x1*x1));
-                    var b = 1 - x1;
-
-                    map.Data[xi1, xi2++] = System.Math.Log(a*a + b*b);
+                    map.Data[xi1, xi2++] = System.Math.Log(BananaFunction(Matrix.Vector(x1, x2)));
                 }
 
                 xi1++;
@@ -61,31 +73,39 @@ namespace Stratosphere.MachineLearning.Studio
             model.Series.Add(map);
 
 
+            PlotSteepestDescent(model);
+            PlotSteepestDescentWithBacktracking(model);
+
+            return model;
+
+        }
+
+        private static void PlotSteepestDescentWithBacktracking(PlotModel model)
+        {
+            var findMethod = new BacktrackingSteepestDescentMethod(trackProgres: true);
+            findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0");
+
+            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross };
+            foreach (var historyX in findMethod.Tracker.History)
+            {
+                historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: -30));
+            }
+
+            model.Series.Add(historyPoints);
+        }
+
+        private static void PlotSteepestDescent(PlotModel model)
+        {
             var findMethod = new SimpleSteepestDescentMethod(trackProgres: true);
-                findMethod.Find(x =>
-                {
-                    var a = 100*(x[1] - (x[0]*x[0]));
-                    var b = 1 - x[0];
+            findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0", 0.001);
 
-                    return a*a + b*b;
-                }, x =>
-                {
-                    var dx = x[0]*(400*x[0]*x[0] + 2) - 400*x[0]*x[1] - 2;
-                    var dy = 200*x[1] - 200*x[0]*x[0];
-                    return Matrix.Vector(dx, dy);
-                }, "-2;0", 0.001);
-
-
-            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross};
+            var historyPoints = new ScatterSeries() {MarkerType = MarkerType.Cross};
             foreach (var historyX in findMethod.History)
             {
                 historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: -40));
             }
 
             model.Series.Add(historyPoints);
-
-            return model;
-
         }
 
         private static PlotModel RegressionTests()

@@ -4,8 +4,8 @@ namespace Stratosphere.Math.Optimization
 {
     public class BacktrackingLineSearch
     {
-        private const double K = 0.125;
-        private const double C = 0.01;
+        private const double K = 0.5;
+        private const double C = 0.5;
 
         /// <summary>
         /// Finds inexact local minimum at direction p.
@@ -23,7 +23,7 @@ namespace Stratosphere.Math.Optimization
             double alpha = 1;
             int i = 0;
 
-            while (!Armijo(f, x0, fx0, dfx_start, p, alpha) && i < 32)
+            while (!Armijo(f, x0, fx0, dfx_start, p, alpha) && i < 10)
             {
                 alpha = K * alpha;
                 i++;
