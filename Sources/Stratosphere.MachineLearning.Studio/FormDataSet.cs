@@ -55,7 +55,7 @@ namespace Stratosphere.MachineLearning.Studio
             int xi1 = 0;
             int xi2 = 0;
 
-            map.Data = new double[(int)((map.X1 - map.X0)/step) + 1, (int)((map.Y1 - map.Y0) / step) + 1];
+            map.Data = new double[(int)((map.X1 - map.X0) / step) + 1, (int)((map.Y1 - map.Y0) / step) + 1];
             model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.HueDistinct(1500), HighColor = OxyColors.Gray, LowColor = OxyColors.Black });
 
 
@@ -82,7 +82,7 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static void PlotSteepestDescentWithBacktracking(PlotModel model)
         {
-            var findMethod = new BacktrackingSteepestDescentMethod(trackProgres: true);
+            var findMethod = new BacktrackingSteepestDescentMethod(trackProgres: true, maxIterations: 1500);
             findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0");
 
             var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross };
@@ -96,10 +96,10 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static void PlotSteepestDescent(PlotModel model)
         {
-            var findMethod = new SimpleSteepestDescentMethod(trackProgres: true);
+            var findMethod = new SimpleSteepestDescentMethod(trackProgres: true, maxIterations: 1500);
             findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0", 0.001);
 
-            var historyPoints = new ScatterSeries() {MarkerType = MarkerType.Cross};
+            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross };
             foreach (var historyX in findMethod.History)
             {
                 historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: -40));
@@ -111,10 +111,10 @@ namespace Stratosphere.MachineLearning.Studio
         private static PlotModel RegressionTests()
         {
             var planetsData = ColumnMajorMatrix.Parse(File.ReadAllText(@"DataSets\swapi_planets_filtered.txt"));
-            var model = new PlotModel {Title = "Star Wars Planets (diameter vs period)"};
+            var model = new PlotModel { Title = "Star Wars Planets (diameter vs period)" };
 
-            var diameters = planetsData.GetColumn(0)*0.001;
-            var periods = planetsData.GetColumn(1)*0.1;
+            var diameters = planetsData.GetColumn(0) * 0.001;
+            var periods = planetsData.GetColumn(1) * 0.1;
             var y = periods.Evaluate();
 
             model.Scatter(diameters, y);
@@ -122,7 +122,7 @@ namespace Stratosphere.MachineLearning.Studio
             PolynomialRegression(diameters, y, model);
             LinearRegression(diameters, y, model);
 
-            model.Axes.Add(new LinearColorAxis {Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3)});
+            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3) });
             return model;
         }
 
@@ -130,7 +130,7 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var X = Matrix.Ones(diameters.Height, 1)
                 .Concat(diameters)
-                .Concat(diameters.Map(x => x*x))
+                .Concat(diameters.Map(x => x * x))
                 .Evaluate();
 
             var theta = BacktrackingSteepestDescentMethod.Find(
@@ -140,7 +140,7 @@ namespace Stratosphere.MachineLearning.Studio
                 1,
                 3000);
 
-            var line = model.Function(diameters, y, x => theta[0] + theta[1]*x + theta[2]*x*x);
+            var line = model.Function(diameters, y, x => theta[0] + theta[1] * x + theta[2] * x * x );
 
             line.Title = ComputeCost(X, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[0];
@@ -166,7 +166,7 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var m = (double)y.Height;
 
-            return (X*theta - y).Map(v => v * v).Sum() / (2 * m);
+            return (X * theta - y).Map(v => v * v).Sum() / (2 * m);
         }
 
         private static Matrix Gradient(Matrix X, Matrix y, Matrix theta)

@@ -1,4 +1,5 @@
 using System;
+using System.CodeDom;
 
 namespace Stratosphere.Math.Optimization
 {
@@ -21,7 +22,6 @@ namespace Stratosphere.Math.Optimization
             Tracker.Track(initial);
 
             var x = initial;
-            var fx = f(x);
             for (int i = 0; i < MaxIterations; ++i)
             {
                 var dfx = df(x);
@@ -30,12 +30,9 @@ namespace Stratosphere.Math.Optimization
 
                 var p = -dfx / dfx.Length;
 
-                var x2 = BacktrackingLineSearch.Find(f, p, x, dfx).Evaluate();
+                x = BacktrackingLineSearch.Find(f, df, p, x, dfx).Evaluate();
 
-                Tracker.Track(x2);
-
-                x = x2;
-                // = f(x2);
+                Tracker.Track(x);
             }
 
             return x;
