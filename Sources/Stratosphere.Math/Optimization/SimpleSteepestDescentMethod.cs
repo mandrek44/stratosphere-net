@@ -30,7 +30,7 @@ namespace Stratosphere.Math.Optimization
 
     public class SimpleSteepestDescentMethod
     {
-        public double Epsilon { get; } = 0.00001;
+        public double Epsilon { get; } = 0.000001;
         public int MaxIterations { get; }
 
         private readonly IIterationsTracker _tracker = new EmptyIterationsTracker();

@@ -1,5 +1,7 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -17,7 +19,9 @@ namespace Stratosphere.MachineLearning.Studio
             InitializeComponent();
             Size = new Size(800, 600);
 
-            var model = RegressionTests();
+
+            var model = XSquared();
+            //var model = RegressionTests();
             //var model = PlotBananaFunction();
 
             var plotView = new PlotView();
@@ -108,6 +112,40 @@ namespace Stratosphere.MachineLearning.Studio
             model.Series.Add(historyPoints);
         }
 
+        private static PlotModel XSquared()
+        {
+            var model = new PlotModel { Title = "f(x) = x^2", LegendFontSize = 20.5, LegendPosition = LegendPosition.TopCenter};
+
+            var X = Matrix.Vector(Enumerable.Range(0, 101).Select(i => -2d + i / 25d).ToArray());
+            
+
+            Func<Matrix, double> f = x => x[0]*x[0];
+            Func<Matrix, Matrix> df = x => 2*x;
+
+            var x0 = Matrix.Vector(-2);
+            var y = X.Map(x => f(Matrix.Vector(x))).Evaluate();
+            var dy = X.Map(x => df(Matrix.Vector(x))).Evaluate();
+
+            var minX = SimpleSteepestDescentMethod.Find(f,df,x0, 0.1, 1000);
+
+            var plot_f = model.Function(X, y, x => x*x);
+            var plot_df = model.Function(X, dy, x => 2 * x);
+            
+            model.Function(X, dy, x => 0).Color = OxyPalettes.Hot(4).Colors[2];
+
+            //model.Point(x0, f(x0), MarkerType.Circle);
+            model.Point(minX, f(minX), MarkerType.Circle);
+
+            plot_df.Title = "df(x)";
+            plot_df.Color = OxyPalettes.Hot(3).Colors[1];
+            plot_f.Title = "f(x)";
+            plot_f.Color = OxyPalettes.Hot(3).Colors[0];
+
+            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3) });
+            return model;
+        }
+
+
         private static PlotModel RegressionTests()
         {
             var planetsData = ColumnMajorMatrix.Parse(File.ReadAllText(@"DataSets\swapi_planets_filtered.txt"));
@@ -149,12 +187,12 @@ namespace Stratosphere.MachineLearning.Studio
         private static void LinearRegression(Matrix diameters, Matrix y, PlotModel model)
         {
             var X = Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate();
-            var theta = BacktrackingSteepestDescentMethod.Find(
+            var theta = SimpleSteepestDescentMethod.Find(
                 _theta => ComputeCost(X, y, _theta),
                 _theta => Gradient(X, y, _theta),
                 Matrix.Ones(X.Width, 1),
-                1,
-                2000);
+                0.0001,
+                5000);
 
             var line = model.Function(diameters, y, x => theta[0] + theta[1] * x);
 
