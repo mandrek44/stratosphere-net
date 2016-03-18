@@ -22,7 +22,9 @@ namespace Stratosphere.Math
 
         public static implicit operator Matrix(string matrix) => ColumnMajorMatrix.Parse(matrix);
 
-        public static Matrix Vector(params double[] v) => new ColumnMajorMatrix(v, new []{v.Length, 1} );
+        public static Matrix Scalar(double v) => new ColumnMajorMatrix(new[] { v }, new[] { 1, 1 });
+
+        public static Matrix Vector(params double[] v) => new ColumnMajorMatrix(v, new[] { v.Length, 1 });
 
         public IEnumerable<int> IndexesByRows()
         {
