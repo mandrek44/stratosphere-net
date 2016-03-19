@@ -20,8 +20,8 @@ namespace Stratosphere.MachineLearning.Studio
             Size = new Size(800, 600);
 
 
-            var model = XSquared();
-            //var model = RegressionTests();
+            //var model = XSquared();
+            var model = RegressionTests();
             //var model = PlotBananaFunction();
 
             var plotView = new PlotView();
@@ -114,30 +114,45 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static PlotModel XSquared()
         {
-            var model = new PlotModel { Title = "f(x) = x^2", LegendFontSize = 20.5, LegendPosition = LegendPosition.TopCenter};
+            var model = new PlotModel { Title = "f(x) = x^2", LegendFontSize = 20.5, LegendPosition = LegendPosition.TopCenter };
 
             var X = Matrix.Vector(Enumerable.Range(0, 101).Select(i => -2d + i / 25d).ToArray());
-            
 
-            Func<Matrix, double> f = x => x[0]*x[0];
-            Func<Matrix, Matrix> df = x => 2*x;
+
+            Func<Matrix, double> f = x => x[0] * x[0];
+            Func<Matrix, Matrix> df = x => 2 * x;
 
             var x0 = Matrix.Vector(-2);
             var y = X.Map(x => f(Matrix.Vector(x))).Evaluate();
             var dy = X.Map(x => df(Matrix.Vector(x))).Evaluate();
 
-            var minX = SimpleSteepestDescentMethod.Find(f,df,x0, 0.1, 1000);
+            var findMethod = new SimpleSteepestDescentMethod(trackProgres: true);
+            var xmin = SimpleSteepestDescentMethod.Find(
+                f: x => x[0] * x[0],
+                df: x => 2 * x,
+                x0: Matrix.Scalar(-2),
+                alpha: 0.95,
+                maxIterations: 1000);
 
-            var plot_f = model.Function(X, y, x => x*x);
-            var plot_df = model.Function(X, dy, x => 2 * x);
-            
-            model.Function(X, dy, x => 0).Color = OxyPalettes.Hot(4).Colors[2];
+            var plot_f = model.Function(X, y, x => x * x);
 
-            //model.Point(x0, f(x0), MarkerType.Circle);
-            model.Point(minX, f(minX), MarkerType.Circle);
+            //model.Function(X, dy, x => 0).Color = OxyPalettes.Hot(4).Colors[2];
+            var lineSeries = new LineSeries() { Color = OxyPalettes.Hot(3).Colors[1] };
 
-            plot_df.Title = "df(x)";
-            plot_df.Color = OxyPalettes.Hot(3).Colors[1];
+            for (int i = 0; i < findMethod.History.Count; ++i)
+            {
+                var x = findMethod.History[i];
+                lineSeries.Points.Add(new DataPoint(x, f(x)));
+            }
+
+            model.Series.Add(lineSeries);
+
+            model.Scatter(Matrix.Vector(findMethod.History.Select(x => x[0]).ToArray()), Matrix.Vector(findMethod.History.Select(xi => xi[0] * xi[0]).ToArray()));
+            model.Point(xmin, f(xmin), MarkerType.Circle);
+
+            //var plot_df = model.Function(X, dy, x => 2 * x);
+            //plot_df.Title = "df(x)";
+            //plot_df.Color = OxyPalettes.Hot(3).Colors[1];
             plot_f.Title = "f(x)";
             plot_f.Color = OxyPalettes.Hot(3).Colors[0];
 
@@ -157,7 +172,7 @@ namespace Stratosphere.MachineLearning.Studio
 
             model.Scatter(diameters, y);
 
-            PolynomialRegression(diameters, y, model);
+            //PolynomialRegression(diameters, y, model);
             LinearRegression(diameters, y, model);
 
             model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3) });
@@ -178,7 +193,7 @@ namespace Stratosphere.MachineLearning.Studio
                 1,
                 3000);
 
-            var line = model.Function(diameters, y, x => theta[0] + theta[1] * x + theta[2] * x * x );
+            var line = model.Function(diameters, y, x => theta[0] + theta[1] * x + theta[2] * x * x);
 
             line.Title = ComputeCost(X, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[0];
@@ -186,34 +201,37 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static void LinearRegression(Matrix diameters, Matrix y, PlotModel model)
         {
-            var X = Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate();
-            var theta = SimpleSteepestDescentMethod.Find(
-                _theta => ComputeCost(X, y, _theta),
-                _theta => Gradient(X, y, _theta),
-                Matrix.Ones(X.Width, 1),
-                0.0001,
-                5000);
+            var theta = LinearRegression(diameters, y);
 
             var line = model.Function(diameters, y, x => theta[0] + theta[1] * x);
 
-            line.Title = ComputeCost(X, y, theta).ToString("0.0000");
-            line.Color = OxyPalettes.Hot(3).Colors[1];
+            //line.Title = ComputeCost(X, y, theta).ToString("0.0000");
+            line.Color = OxyPalettes.Hot(3).Colors[0];
         }
+
+private static Matrix LinearRegression(Matrix diameters, Matrix y)
+{
+    var X = Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate();
+    return SimpleSteepestDescentMethod.Find(
+        f: theta => ComputeCost(X, y, theta),
+        df: theta => Gradient(X, y, theta),
+        x0:Matrix.Ones(X.Width, 1),
+        alpha: 0.0001,
+        maxIterations: 5000);
+}
 
         private static double ComputeCost(Matrix X, Matrix y, Matrix theta)
-        {
-            var m = (double)y.Height;
+{
+    var m = y.Height;
+    var error = X * theta - y;
+    return error.Map(v => v * v).Sum() / (2.0 * m);
+}
 
-            return (X * theta - y).Map(v => v * v).Sum() / (2 * m);
-        }
-
-        private static Matrix Gradient(Matrix X, Matrix y, Matrix theta)
-        {
-            var tC = (X * theta - y);
-            var a = (Matrix.Ones(theta.Height, 1) * tC.Transpose()).Transpose().MultiplyEach(X);
-            var b = a.Sum(0).Transpose();
-
-            return b;
-        }
+private static Matrix Gradient(Matrix X, Matrix y, Matrix theta)
+{
+    var error = (X * theta - y);
+    var a = (Matrix.Ones(theta.Height, 1) * error.Transpose()).Transpose().MultiplyEach(X);
+    return a.Sum(0).Transpose();
+}
     }
 }

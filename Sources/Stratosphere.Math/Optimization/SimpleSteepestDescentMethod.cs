@@ -44,9 +44,9 @@ namespace Stratosphere.Math.Optimization
                 _tracker = new IterationsTracker();
         }
 
-        public static Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix initial, double alpha, int maxIterations)
+        public static Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix x0, double alpha, int maxIterations)
         {
-            return new SimpleSteepestDescentMethod(maxIterations).Find(f, df, initial, alpha);
+            return new SimpleSteepestDescentMethod(maxIterations).Find(f, df, x0, alpha);
         }
 
         public Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix initial, double alpha)

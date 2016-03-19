@@ -10,7 +10,7 @@ namespace Stratosphere.MachineLearning.Studio
     {
         public static ScatterSeries Scatter(this PlotModel plot, Matrix x, Matrix y, MarkerType marker = MarkerType.Cross)
         {
-            var scatterSeries = new ScatterSeries() { MarkerType = marker };
+            var scatterSeries = new ScatterSeries() { MarkerType = marker, MarkerStrokeThickness = 3};
             for (int row = 0; row < x.Height; ++row)
                 scatterSeries.Points.Add(new ScatterPoint(x[row, 0], y[row, 0], 5, 1));
 
@@ -57,6 +57,11 @@ namespace Stratosphere.MachineLearning.Studio
         }
 
         public static void Line(this PlotModel plot, Matrix X, Matrix y, Matrix lineCoefficients)
+        {
+            Function(plot, X, y, x => lineCoefficients[0] + x * lineCoefficients[1]);
+        }
+
+        public static void LineBetween(this PlotModel plot, Matrix X, Matrix y, Matrix lineCoefficients)
         {
             Function(plot, X, y, x => lineCoefficients[0] + x * lineCoefficients[1]);
         }
