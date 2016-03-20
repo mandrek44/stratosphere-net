@@ -134,7 +134,7 @@ namespace Stratosphere.MachineLearning.Studio
                 alpha: 0.95,
                 maxIterations: 1000);
 
-            var plot_f = model.Function(X, y, x => x * x);
+            var plot_f = model.Function(X, x => x * x);
 
             //model.Function(X, dy, x => 0).Color = OxyPalettes.Hot(4).Colors[2];
             var lineSeries = new LineSeries() { Color = OxyPalettes.Hot(3).Colors[1] };
@@ -172,8 +172,8 @@ namespace Stratosphere.MachineLearning.Studio
 
             model.Scatter(diameters, y);
 
-            //PolynomialRegression(diameters, y, model);
-            LinearRegression(diameters, y, model);
+            PolynomialRegression(diameters, y, model);
+            //LinearRegression(diameters, y, model);
 
             model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3) });
             return model;
@@ -193,7 +193,7 @@ namespace Stratosphere.MachineLearning.Studio
                 1,
                 3000);
 
-            var line = model.Function(diameters, y, x => theta[0] + theta[1] * x + theta[2] * x * x);
+            var line = model.Function(diameters, x => theta[0] + theta[1] * x + theta[2] * x * x);
 
             line.Title = ComputeCost(X, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[0];
@@ -203,7 +203,7 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var theta = LinearRegression(diameters, y);
 
-            var line = model.Function(diameters, y, x => theta[0] + theta[1] * x);
+            var line = model.Function(diameters, x => theta[0] + theta[1] * x);
 
             //line.Title = ComputeCost(X, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[0];
