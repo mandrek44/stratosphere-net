@@ -9,6 +9,7 @@ using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using Stratosphere.Math;
 using Stratosphere.Math.Optimization;
+using static System.Math;
 
 namespace Stratosphere.MachineLearning.Studio
 {
@@ -19,10 +20,9 @@ namespace Stratosphere.MachineLearning.Studio
             InitializeComponent();
             Size = new Size(800, 600);
 
-
             //var model = XSquared();
-            var model = RegressionTests();
-            //var model = PlotBananaFunction();
+            //var model = RegressionTests();
+            var model = PlotBananaFunction();
 
             var plotView = new PlotView();
             plotView.Dock = DockStyle.Fill;
@@ -53,35 +53,12 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var model = new PlotModel();
 
-            var map = new HeatMapSeries { X0 = -2.0, X1 = 2.0, Y0 = -1, Y1 = 3, Data = new double[40, 40], Interpolate = false, RenderMethod = HeatMapRenderMethod.Rectangles };
-
-            double step = 0.05;
-            int xi1 = 0;
-            int xi2 = 0;
-
-            map.Data = new double[(int)((map.X1 - map.X0) / step) + 1, (int)((map.Y1 - map.Y0) / step) + 1];
-            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.HueDistinct(1500), HighColor = OxyColors.Gray, LowColor = OxyColors.Black });
-
-
-            for (double x1 = map.X0; x1 < map.X1; x1 += step)
-            {
-                xi2 = 0;
-                for (double x2 = map.Y0; x2 < map.Y1; x2 += step)
-                {
-                    map.Data[xi1, xi2++] = System.Math.Log(BananaFunction(Matrix.Vector(x1, x2)));
-                }
-
-                xi1++;
-            }
-
-            model.Series.Add(map);
-
+            model.HeatMap(-2.0, 2.0, -1, 3, x => Log(BananaFunction(x)));
 
             PlotSteepestDescent(model);
             PlotSteepestDescentWithBacktracking(model);
 
             return model;
-
         }
 
         private static void PlotSteepestDescentWithBacktracking(PlotModel model)
