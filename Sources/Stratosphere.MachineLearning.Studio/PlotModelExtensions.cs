@@ -33,7 +33,7 @@ namespace Stratosphere.MachineLearning.Studio
 
         public static LineSeries Function(this PlotModel plot, Matrix dx, Func<double, double> f) => Function(plot, dx.Min(), dx.Max(), f);
     
-        private static LineSeries Function(PlotModel plot, double minX, double maxX, Func<double, double> f)
+        public static LineSeries Function(this PlotModel plot, double minX, double maxX, Func<double, double> f)
         {
             double step = (maxX - minX) / 100;
             var lineSeries = new LineSeries();
@@ -70,11 +70,11 @@ namespace Stratosphere.MachineLearning.Studio
                 RenderMethod = HeatMapRenderMethod.Rectangles
             };
 
-            var resolution = 100;
+            var resolution = 200;
             var step = (maxX0 - minX0)/resolution;
 
             
-            map.Data = new double[100, (int) ((map.Y1 - map.Y0)/step)];
+            map.Data = new double[resolution, (int) ((map.Y1 - map.Y0)/step)];
             model.Axes.Add(new LinearColorAxis
             {
                 Position = AxisPosition.Right,

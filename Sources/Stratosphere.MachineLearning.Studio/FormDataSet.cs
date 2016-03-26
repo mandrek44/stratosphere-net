@@ -21,8 +21,8 @@ namespace Stratosphere.MachineLearning.Studio
             Size = new Size(800, 600);
 
             //var model = XSquared();
-            //var model = RegressionTests();
-            var model = PlotBananaFunction();
+            var model = RegressionTests();
+            //var model = PlotBananaFunction();
 
             var plotView = new PlotView();
             plotView.Dock = DockStyle.Fill;
@@ -55,8 +55,8 @@ namespace Stratosphere.MachineLearning.Studio
 
             model.HeatMap(-2.0, 2.0, -1, 3, x => Log(BananaFunction(x)));
 
-            PlotSteepestDescent(model);
-            PlotSteepestDescentWithBacktracking(model);
+            //PlotSteepestDescent(model);
+            //PlotSteepestDescentWithBacktracking(model);
 
             return model;
         }
@@ -66,13 +66,20 @@ namespace Stratosphere.MachineLearning.Studio
             var findMethod = new BacktrackingSteepestDescentMethod(trackProgres: true, maxIterations: 1500);
             findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0");
 
-            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross };
+            var historyLine = new LineSeries() { MarkerType = MarkerType.Cross};
+            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross, MarkerStrokeThickness = 5};
+            double lastF = double.MaxValue;
             foreach (var historyX in findMethod.Tracker.History)
             {
-                historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: -30));
+                var f = BananaFunction(historyX);
+                historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: f < lastF + 0.001 ? -30 : -50));
+                historyLine.Points.Add(new DataPoint(historyX[0], historyX[1]));
+
+                lastF = f;
             }
 
             model.Series.Add(historyPoints);
+            model.Series.Add(historyLine);
         }
 
         private static void PlotSteepestDescent(PlotModel model)
@@ -91,49 +98,51 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static PlotModel XSquared()
         {
-            var model = new PlotModel { Title = "f(x) = x^2", LegendFontSize = 20.5, LegendPosition = LegendPosition.TopCenter };
+            var model = new PlotModel { Title = "f(x) = x^2" , LegendFontSize = 20.5, LegendPosition = LegendPosition.TopCenter };
 
-            var X = Matrix.Vector(Enumerable.Range(0, 101).Select(i => -2d + i / 25d).ToArray());
+            model.Function(-2, 2, v => v * v);
+
+            //var X = Matrix.Vector(Enumerable.Range(0, 101).Select(i => -2d + i / 25d).ToArray());
 
 
-            Func<Matrix, double> f = x => x[0] * x[0];
-            Func<Matrix, Matrix> df = x => 2 * x;
+            //Func<Matrix, double> f = x => x[0] * x[0];
+            //Func<Matrix, Matrix> df = x => 2 * x;
 
-            var x0 = Matrix.Vector(-2);
-            var y = X.Map(x => f(Matrix.Vector(x))).Evaluate();
-            var dy = X.Map(x => df(Matrix.Vector(x))).Evaluate();
+            //var x0 = Matrix.Vector(-2);
+            //var y = X.Map(x => f(Matrix.Vector(x))).Evaluate();
+            //var dy = X.Map(x => df(Matrix.Vector(x))).Evaluate();
 
-            var findMethod = new SimpleSteepestDescentMethod(trackProgres: true);
-            var xmin = SimpleSteepestDescentMethod.Find(
-                f: x => x[0] * x[0],
-                df: x => 2 * x,
-                x0: Matrix.Scalar(-2),
-                alpha: 0.95,
-                maxIterations: 1000);
+            //var findMethod = new SimpleSteepestDescentMethod(trackProgres: true);
+            //var xmin = SimpleSteepestDescentMethod.Find(
+            //    f: x => x[0] * x[0],
+            //    df: x => 2 * x,
+            //    x0: Matrix.Scalar(-2),
+            //    alpha: 0.95,
+            //    maxIterations: 1000);
 
-            var plot_f = model.Function(X, x => x * x);
+            //var plot_f = model.Function(X, x => x * x);
 
-            //model.Function(X, dy, x => 0).Color = OxyPalettes.Hot(4).Colors[2];
-            var lineSeries = new LineSeries() { Color = OxyPalettes.Hot(3).Colors[1] };
+            ////model.Function(X, dy, x => 0).Color = OxyPalettes.Hot(4).Colors[2];
+            //var lineSeries = new LineSeries() { Color = OxyPalettes.Hot(3).Colors[1] };
 
-            for (int i = 0; i < findMethod.History.Count; ++i)
-            {
-                var x = findMethod.History[i];
-                lineSeries.Points.Add(new DataPoint(x, f(x)));
-            }
+            //for (int i = 0; i < findMethod.History.Count; ++i)
+            //{
+            //    var x = findMethod.History[i];
+            //    lineSeries.Points.Add(new DataPoint(x, f(x)));
+            //}
 
-            model.Series.Add(lineSeries);
+            //model.Series.Add(lineSeries);
 
-            model.Scatter(Matrix.Vector(findMethod.History.Select(x => x[0]).ToArray()), Matrix.Vector(findMethod.History.Select(xi => xi[0] * xi[0]).ToArray()));
-            model.Point(xmin, f(xmin), MarkerType.Circle);
+            //model.Scatter(Matrix.Vector(findMethod.History.Select(x => x[0]).ToArray()), Matrix.Vector(findMethod.History.Select(xi => xi[0] * xi[0]).ToArray()));
+            //model.Point(xmin, f(xmin), MarkerType.Circle);
 
-            //var plot_df = model.Function(X, dy, x => 2 * x);
-            //plot_df.Title = "df(x)";
-            //plot_df.Color = OxyPalettes.Hot(3).Colors[1];
-            plot_f.Title = "f(x)";
-            plot_f.Color = OxyPalettes.Hot(3).Colors[0];
+            ////var plot_df = model.Function(X, dy, x => 2 * x);
+            ////plot_df.Title = "df(x)";
+            ////plot_df.Color = OxyPalettes.Hot(3).Colors[1];
+            //plot_f.Title = "f(x)";
+            //plot_f.Color = OxyPalettes.Hot(3).Colors[0];
 
-            model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3) });
+            //model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3) });
             return model;
         }
 
@@ -149,7 +158,14 @@ namespace Stratosphere.MachineLearning.Studio
 
             model.Scatter(diameters, y);
 
-            PolynomialRegression(diameters, y, model);
+            var theta = LinearRegression(diameters, y);
+
+            var line = model.Function(diameters, x => theta[0] + theta[1] * x);
+
+            //line.Title = ComputeCost(X, y, theta).ToString("0.0000");
+            line.Color = OxyPalettes.Hot(3).Colors[0];
+
+            //PolynomialRegression(diameters, y, model);
             //LinearRegression(diameters, y, model);
 
             model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3) });

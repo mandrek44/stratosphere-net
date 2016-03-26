@@ -5,8 +5,9 @@ namespace Stratosphere.Math.Optimization
     public class BacktrackingLineSearch
     {
         private const double K = 0.5;
-        private const double C = 0.1;
-        private const double C2 = 0.5;
+        private const double C = 0.5;
+        private const double C2 = 0.9;
+        private const double Epsilon = 0.0001;
 
         /// <summary>
         /// Finds inexact local minimum at direction p.
@@ -29,7 +30,7 @@ namespace Stratosphere.Math.Optimization
             // TODO: Implement algorithm from page 60 in "Numerical Optimization", J. Nocedal, S.J. Wright
             while (!Armijo(f, x0, fx0, dfx_start, p, alpha) && i < 16)
             {
-                var wolfie = df(x0 + alpha*p).T*p >= C2*dfx_start.T*p;
+                var wolfie = df(x0 + alpha * p).T * p >= C2 * dfx_start.T * p;
                 if (!wolfie)
                     break;
 
@@ -42,7 +43,7 @@ namespace Stratosphere.Math.Optimization
 
         private static bool Armijo(Func<Matrix, double> f, Matrix x0, double fx0, Matrix dfx0, Matrix p, double alpha)
         {
-            return f(x0 + alpha * p) <= fx0 + C * alpha * (dfx0.T * p);
+            return f(x0 + alpha * p) <= fx0 + C * alpha * (dfx0.T * p) + Epsilon;
         }
     }
 }
