@@ -21,8 +21,8 @@ namespace Stratosphere.MachineLearning.Studio
             Size = new Size(800, 600);
 
             //var model = XSquared();
-            var model = RegressionTests();
-            //var model = PlotBananaFunction();
+            //var model = RegressionTests();
+            var model = PlotBananaFunction();
 
             var plotView = new PlotView();
             plotView.Dock = DockStyle.Fill;
@@ -36,10 +36,10 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static double BananaFunction(Matrix x)
         {
-            var a = 100 * (x[1] - (x[0] * x[0]));
+            var a = x[1] - (x[0] * x[0]);
             var b = 1 - x[0];
 
-            return a * a + b * b;
+            return 100 * a * a + b * b;
         }
 
         private static Matrix BananaFunctionDerivatives(Matrix x)
@@ -66,8 +66,8 @@ namespace Stratosphere.MachineLearning.Studio
             var findMethod = new BacktrackingSteepestDescentMethod(trackProgres: true, maxIterations: 1500);
             findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0");
 
-            var historyLine = new LineSeries() { MarkerType = MarkerType.Cross};
-            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross, MarkerStrokeThickness = 5};
+            var historyLine = new LineSeries() { MarkerType = MarkerType.Cross };
+            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross, MarkerStrokeThickness = 5 };
             double lastF = double.MaxValue;
             foreach (var historyX in findMethod.Tracker.History)
             {
@@ -98,7 +98,7 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static PlotModel XSquared()
         {
-            var model = new PlotModel { Title = "f(x) = x^2" , LegendFontSize = 20.5, LegendPosition = LegendPosition.TopCenter };
+            var model = new PlotModel { Title = "f(x) = x^2", LegendFontSize = 20.5, LegendPosition = LegendPosition.TopCenter };
 
             model.Function(-2, 2, v => v * v);
 
@@ -202,29 +202,29 @@ namespace Stratosphere.MachineLearning.Studio
             line.Color = OxyPalettes.Hot(3).Colors[0];
         }
 
-private static Matrix LinearRegression(Matrix diameters, Matrix y)
-{
-    var X = Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate();
-    return SimpleSteepestDescentMethod.Find(
-        f: theta => ComputeCost(X, y, theta),
-        df: theta => Gradient(X, y, theta),
-        x0:Matrix.Ones(X.Width, 1),
-        alpha: 0.0001,
-        maxIterations: 5000);
-}
+        private static Matrix LinearRegression(Matrix diameters, Matrix y)
+        {
+            var X = Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate();
+            return SimpleSteepestDescentMethod.Find(
+                f: theta => ComputeCost(X, y, theta),
+                df: theta => Gradient(X, y, theta),
+                x0: Matrix.Ones(X.Width, 1),
+                alpha: 0.0001,
+                maxIterations: 5000);
+        }
 
         private static double ComputeCost(Matrix X, Matrix y, Matrix theta)
-{
-    var m = y.Height;
-    var error = X * theta - y;
-    return error.Map(v => v * v).Sum() / (2.0 * m);
-}
+        {
+            var m = y.Height;
+            var error = X * theta - y;
+            return error.Map(v => v * v).Sum() / (2.0 * m);
+        }
 
-private static Matrix Gradient(Matrix X, Matrix y, Matrix theta)
-{
-    var error = (X * theta - y);
-    var a = (Matrix.Ones(theta.Height, 1) * error.Transpose()).Transpose().MultiplyEach(X);
-    return a.Sum(0).Transpose();
-}
+        private static Matrix Gradient(Matrix X, Matrix y, Matrix theta)
+        {
+            var error = (X * theta - y);
+            var a = (Matrix.Ones(theta.Height, 1) * error.Transpose()).Transpose().MultiplyEach(X);
+            return a.Sum(0).Transpose();
+        }
     }
 }

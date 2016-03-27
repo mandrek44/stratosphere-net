@@ -11,7 +11,7 @@ namespace Stratosphere.MachineLearning.Studio
     {
         public static ScatterSeries Scatter(this PlotModel plot, Matrix x, Matrix y, MarkerType marker = MarkerType.Cross)
         {
-            var scatterSeries = new ScatterSeries() { MarkerType = marker, MarkerStrokeThickness = 3};
+            var scatterSeries = new ScatterSeries() { MarkerType = marker, MarkerStrokeThickness = 3 };
             for (int row = 0; row < x.Height; ++row)
                 scatterSeries.Points.Add(new ScatterPoint(x[row, 0], y[row, 0], 5, 1));
 
@@ -32,7 +32,7 @@ namespace Stratosphere.MachineLearning.Studio
         }
 
         public static LineSeries Function(this PlotModel plot, Matrix dx, Func<double, double> f) => Function(plot, dx.Min(), dx.Max(), f);
-    
+
         public static LineSeries Function(this PlotModel plot, double minX, double maxX, Func<double, double> f)
         {
             double step = (maxX - minX) / 100;
@@ -54,7 +54,7 @@ namespace Stratosphere.MachineLearning.Studio
         {
             Function(plot, X, x => lineCoefficients[0] + x * lineCoefficients[1]);
         }
-        
+
         public static HeatMapSeries HeatMap(this PlotModel model, Matrix dx1, Matrix dx2, Func<Matrix, double> f) =>
             HeatMap(model, dx1.Min(), dx1.Max(), dx2.Min(), dx2.Max(), f);
 
@@ -70,34 +70,34 @@ namespace Stratosphere.MachineLearning.Studio
                 RenderMethod = HeatMapRenderMethod.Rectangles
             };
 
-            var resolution = 200;
-            var step = (maxX0 - minX0)/resolution;
+            model.Series.Add(map);
 
-            
-            map.Data = new double[resolution, (int) ((map.Y1 - map.Y0)/step)];
+            var x0Resolution = 200;
+            var step = (maxX0 - minX0) / x0Resolution;
+            var x1Resolution = (int)((map.Y1 - map.Y0) / step);
+
+            map.Data = new double[x0Resolution, x1Resolution];
+
+
+            int x0Index = 0;
+
+            for (double x0 = minX0; x0 < maxX0; x0 += step)
+            {
+                var x1Index = 0;
+                for (double x1 = minX1; x1 < maxX1; x1 += step)
+                {
+                    map.Data[x0Index, x1Index++] = f(Matrix.Vector(x0, x1));
+                }
+
+                x0Index++;
+            }
+
             model.Axes.Add(new LinearColorAxis
             {
                 Position = AxisPosition.Right,
                 Palette = OxyPalettes.HueDistinct(1500),
-                HighColor = OxyColors.Gray,
-                LowColor = OxyColors.Black
+
             });
-
-            int xi1 = 0;
-            int xi2 = 0;
-
-            for (double x1_ = map.X0; x1_ < map.X1; x1_ += step)
-            {
-                xi2 = 0;
-                for (double x2 = map.Y0; x2 < map.Y1; x2 += step)
-                {
-                    map.Data[xi1, xi2++] = f(Matrix.Vector(x1_, x2));
-                }
-
-                xi1++;
-            }
-
-            model.Series.Add(map);
 
             return map;
         }
