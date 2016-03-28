@@ -15,14 +15,14 @@ One neat way for doing it is to plot a heat map of values. It works like in cart
 ## HeatMapSeries
 OxyPlot has a data series called [`HeatMapSeries`](<http://docs.oxyplot.org/en/latest/models/series/HeatMapSeries.html>) that let us do exactly that.
 
-First, let's define some context:
+We'll work in context of following method:
 
     public static HeatMapSeries HeatMap(this PlotModel model, double minX0, double maxX0, double minX1, double maxX1, Func<Matrix, double> f)
     {
     
-We want to plot a function f (that accepts Matrix and computes single value) in given range of values. 
+(plot function f, that accepts Matrix and computes single value, in given range of values) 
 
-First initialize the OxyPlot series:
+Start by initializing the OxyPlot series:
 
     var map = new HeatMapSeries
     {

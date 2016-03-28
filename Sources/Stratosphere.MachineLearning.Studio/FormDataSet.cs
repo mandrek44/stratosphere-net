@@ -21,8 +21,8 @@ namespace Stratosphere.MachineLearning.Studio
             Size = new Size(800, 600);
 
             //var model = XSquared();
-            //var model = RegressionTests();
-            var model = PlotBananaFunction();
+            var model = RegressionTests();
+            //var model = PlotBananaFunction();
 
             var plotView = new PlotView();
             plotView.Dock = DockStyle.Fill;
@@ -57,6 +57,7 @@ namespace Stratosphere.MachineLearning.Studio
 
             //PlotSteepestDescent(model);
             //PlotSteepestDescentWithBacktracking(model);
+            PlotQuasiNewtonWithBacktracking(model);
 
             return model;
         }
@@ -64,6 +65,27 @@ namespace Stratosphere.MachineLearning.Studio
         private static void PlotSteepestDescentWithBacktracking(PlotModel model)
         {
             var findMethod = new BacktrackingSteepestDescentMethod(trackProgres: true, maxIterations: 1500);
+            findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0");
+
+            var historyLine = new LineSeries() { MarkerType = MarkerType.Cross };
+            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross, MarkerStrokeThickness = 5 };
+            double lastF = double.MaxValue;
+            foreach (var historyX in findMethod.Tracker.History)
+            {
+                var f = BananaFunction(historyX);
+                historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: f < lastF + 0.001 ? -30 : -50));
+                historyLine.Points.Add(new DataPoint(historyX[0], historyX[1]));
+
+                lastF = f;
+            }
+
+            model.Series.Add(historyPoints);
+            model.Series.Add(historyLine);
+        }
+
+        private static void PlotQuasiNewtonWithBacktracking(PlotModel model)
+        {
+            var findMethod = new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500);
             findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0");
 
             var historyLine = new LineSeries() { MarkerType = MarkerType.Cross };
@@ -165,8 +187,8 @@ namespace Stratosphere.MachineLearning.Studio
             //line.Title = ComputeCost(X, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[0];
 
-            //PolynomialRegression(diameters, y, model);
-            //LinearRegression(diameters, y, model);
+            PolynomialRegression(diameters, y, model);
+            LinearRegression(diameters, y, model);
 
             model.Axes.Add(new LinearColorAxis { Position = AxisPosition.Right, Palette = OxyPalettes.Hot(3) });
             return model;
@@ -177,19 +199,20 @@ namespace Stratosphere.MachineLearning.Studio
             var X = Matrix.Ones(diameters.Height, 1)
                 .Concat(diameters)
                 .Concat(diameters.Map(x => x * x))
+                .Concat(diameters.Map(x => x * x * x))
                 .Evaluate();
 
-            var theta = BacktrackingSteepestDescentMethod.Find(
+            var theta = QuasiNewtonMethod.Find(
                 _theta => ComputeCost(X, y, _theta),
                 _theta => Gradient(X, y, _theta),
                 Matrix.Ones(X.Width, 1),
                 1,
-                3000);
+                1000);
 
-            var line = model.Function(diameters, x => theta[0] + theta[1] * x + theta[2] * x * x);
+            var line = model.Function(diameters, x => theta[0] + theta[1] * x + theta[2] * x * x + theta[3] * x *x * x);
 
             line.Title = ComputeCost(X, y, theta).ToString("0.0000");
-            line.Color = OxyPalettes.Hot(3).Colors[0];
+            line.Color = OxyPalettes.Hot(3).Colors[1];
         }
 
         private static void LinearRegression(Matrix diameters, Matrix y, PlotModel model)
@@ -198,19 +221,19 @@ namespace Stratosphere.MachineLearning.Studio
 
             var line = model.Function(diameters, x => theta[0] + theta[1] * x);
 
-            //line.Title = ComputeCost(X, y, theta).ToString("0.0000");
+            line.Title = ComputeCost(Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate(), y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[0];
         }
 
         private static Matrix LinearRegression(Matrix diameters, Matrix y)
         {
             var X = Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate();
-            return SimpleSteepestDescentMethod.Find(
+            return QuasiNewtonMethod.Find(
                 f: theta => ComputeCost(X, y, theta),
                 df: theta => Gradient(X, y, theta),
                 x0: Matrix.Ones(X.Width, 1),
                 alpha: 0.0001,
-                maxIterations: 5000);
+                maxIterations: 1000);
         }
 
         private static double ComputeCost(Matrix X, Matrix y, Matrix theta)

@@ -286,6 +286,17 @@ namespace Stratosphere.Math
 
             return new ColumnMajorMatrix(ones, dimensions);
         }
+
+        public static Matrix Identity(int rank)
+        {
+            var identity = new double[rank * rank];
+            for (int i = 0; i < rank; i++)
+            {
+                identity[i * rank + i] = 1;
+            }
+
+            return new ColumnMajorMatrix(identity, new[] { rank, rank });
+        }
     }
 
 }

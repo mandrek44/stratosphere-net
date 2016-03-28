@@ -41,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Matrix\ColumnsConcatMatrix.cs" />
+    <Compile Include="Optimization\EmptyIterationsTracker.cs" />
+    <Compile Include="Optimization\IIterationsTracker.cs" />
+    <Compile Include="Optimization\IterationsTracker.cs" />
     <Compile Include="Utils\ArrayExtension.cs" />
     <Compile Include="Matrix\ColumnFilteredMatrix.cs" />
     <Compile Include="Optimization\BacktrackingLineSearch.cs" />

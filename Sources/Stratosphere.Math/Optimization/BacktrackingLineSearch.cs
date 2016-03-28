@@ -7,7 +7,7 @@ namespace Stratosphere.Math.Optimization
         private const double K = 0.5;
         private const double C = 0.5;
         private const double C2 = 0.9;
-        private const double Epsilon = 0.0001;
+        private const double Epsilon = 0;
 
         /// <summary>
         /// Finds inexact local minimum at direction p.
