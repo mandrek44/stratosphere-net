@@ -89,8 +89,9 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static Matrix BananaFunctionDerivatives(Matrix x)
         {
-            var dx = x[0] * (400 * x[0] * x[0] + 2) - 400 * x[0] * x[1] - 2;
-            var dy = 200 * x[1] - 200 * x[0] * x[0];
+            var dx = 2 * (200 * x[0] * x[0] * x[0] - 200 * x[0] * x[1] + x[0] - 1);
+            var dy = 200 * (x[1] - x[0] * x[0]);
+
             return Matrix.Vector(dx, dy);
         }
 
