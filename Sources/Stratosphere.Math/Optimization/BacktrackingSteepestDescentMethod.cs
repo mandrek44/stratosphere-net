@@ -1,9 +1,14 @@
 using System;
-using System.CodeDom;
 
 namespace Stratosphere.Math.Optimization
 {
-    public class BacktrackingSteepestDescentMethod
+    public interface IOptimizationMethod
+    {
+        IIterationsTracker Tracker { get; }
+        Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix initial);
+    }
+
+    public class BacktrackingSteepestDescentMethod : IOptimizationMethod
     {
         private static double _epsilon = 0.00001;
         public IIterationsTracker Tracker { get; } = new EmptyIterationsTracker();
@@ -17,7 +22,7 @@ namespace Stratosphere.Math.Optimization
                 Tracker = new IterationsTracker();
         }
 
-        public Math.Matrix Find(Func<Math.Matrix, double> f, Func<Math.Matrix, Math.Matrix> df, Math.Matrix initial)
+        public Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix initial)
         {
             Tracker.Track(initial);
 
@@ -38,7 +43,7 @@ namespace Stratosphere.Math.Optimization
             return x;
         }
 
-        public static Math.Matrix Find(Func<Math.Matrix, double> f, Func<Math.Matrix, Math.Matrix> df, Math.Matrix initial, double alpha, int maxIterations)
+        public static Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix initial, double alpha, int maxIterations)
         {
             return new BacktrackingSteepestDescentMethod(maxIterations).Find(f, df, initial);
         }

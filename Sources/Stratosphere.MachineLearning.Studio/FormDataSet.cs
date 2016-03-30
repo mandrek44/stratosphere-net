@@ -64,28 +64,21 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static void PlotSteepestDescentWithBacktracking(PlotModel model)
         {
-            var findMethod = new BacktrackingSteepestDescentMethod(trackProgres: true, maxIterations: 1500);
-            findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0");
-
-            var historyLine = new LineSeries() { MarkerType = MarkerType.Cross };
-            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross, MarkerStrokeThickness = 5 };
-            double lastF = double.MaxValue;
-            foreach (var historyX in findMethod.Tracker.History)
-            {
-                var f = BananaFunction(historyX);
-                historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: f < lastF + 0.001 ? -30 : -50));
-                historyLine.Points.Add(new DataPoint(historyX[0], historyX[1]));
-
-                lastF = f;
-            }
-
-            model.Series.Add(historyPoints);
-            model.Series.Add(historyLine);
+            PlotOptimizationSteps(model, new BacktrackingSteepestDescentMethod(trackProgres: true, maxIterations: 1500));
         }
 
         private static void PlotQuasiNewtonWithBacktracking(PlotModel model)
         {
-            var findMethod = new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500);
+            PlotOptimizationSteps(model, new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500));
+        }
+
+        private static void PlotSteepestDescent(PlotModel model)
+        {
+            PlotOptimizationSteps(model, new SimpleSteepestDescentMethod(trackProgres: true, maxIterations: 1500));
+        }
+
+        private static void PlotOptimizationSteps(PlotModel model, IOptimizationMethod findMethod)
+        {
             findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0");
 
             var historyLine = new LineSeries() { MarkerType = MarkerType.Cross };
@@ -102,20 +95,6 @@ namespace Stratosphere.MachineLearning.Studio
 
             model.Series.Add(historyPoints);
             model.Series.Add(historyLine);
-        }
-
-        private static void PlotSteepestDescent(PlotModel model)
-        {
-            var findMethod = new SimpleSteepestDescentMethod(trackProgres: true, maxIterations: 1500);
-            findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0", 0.001);
-
-            var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross };
-            foreach (var historyX in findMethod.History)
-            {
-                historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: -40));
-            }
-
-            model.Series.Add(historyPoints);
         }
 
         private static PlotModel XSquared()
@@ -182,7 +161,7 @@ namespace Stratosphere.MachineLearning.Studio
 
             var theta = LinearRegression(diameters, y);
 
-            var line = model.Function(diameters, x => theta[0] + theta[1] * x);
+            var line = model.Polynomial(diameters, theta);
 
             //line.Title = ComputeCost(X, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[0];
@@ -200,6 +179,7 @@ namespace Stratosphere.MachineLearning.Studio
                 .Concat(diameters)
                 .Concat(diameters.Map(x => x * x))
                 .Concat(diameters.Map(x => x * x * x))
+                .Concat(diameters.Map(x => x * x * x*x))
                 .Evaluate();
 
             var theta = QuasiNewtonMethod.Find(
@@ -209,7 +189,7 @@ namespace Stratosphere.MachineLearning.Studio
                 1,
                 1000);
 
-            var line = model.Function(diameters, x => theta[0] + theta[1] * x + theta[2] * x * x + theta[3] * x *x * x);
+            var line = model.Polynomial(diameters, theta);
 
             line.Title = ComputeCost(X, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[1];

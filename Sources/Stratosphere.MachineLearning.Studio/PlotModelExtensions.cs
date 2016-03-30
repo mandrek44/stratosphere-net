@@ -50,9 +50,21 @@ namespace Stratosphere.MachineLearning.Studio
             return lineSeries;
         }
 
-        public static void Line(this PlotModel plot, Matrix X, Matrix y, Matrix lineCoefficients)
+        public static LineSeries Polynomial(this PlotModel plot, Matrix X, Matrix coefficients)
         {
-            Function(plot, X, x => lineCoefficients[0] + x * lineCoefficients[1]);
+            return Function(plot, X, x =>
+            {
+                double polynomialValue = 0;
+                double xPower = 1;
+
+                for (int i = 0; i < coefficients.Height; ++i)
+                {
+                    polynomialValue += coefficients[i] * xPower;
+                    xPower *= x;
+                }
+
+                return polynomialValue;
+            });
         }
 
         public static HeatMapSeries HeatMap(this PlotModel model, Matrix dx1, Matrix dx2, Func<Matrix, double> f) =>
