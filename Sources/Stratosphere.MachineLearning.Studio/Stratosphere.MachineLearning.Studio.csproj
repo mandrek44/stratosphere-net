@@ -54,6 +54,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ExerciseSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExerciseSelector.Designer.cs">
+      <DependentUpon>ExerciseSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormDataSet.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +69,9 @@
     <Compile Include="PlotModelExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ExerciseSelector.resx">
+      <DependentUpon>ExerciseSelector.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormDataSet.resx">
       <DependentUpon>FormDataSet.cs</DependentUpon>
     </EmbeddedResource>

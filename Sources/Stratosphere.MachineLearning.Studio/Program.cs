@@ -16,7 +16,7 @@ namespace Stratosphere.MachineLearning.Studio
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FormDataSet());
+            Application.Run(new ExerciseSelector());
         }
     }
 }
