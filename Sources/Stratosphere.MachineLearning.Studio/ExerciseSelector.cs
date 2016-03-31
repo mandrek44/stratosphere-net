@@ -45,10 +45,12 @@ namespace Stratosphere.MachineLearning.Studio
         private void buttonNewton_Click(object sender, EventArgs e)
         {
             var form = new FormDataSet();
-            form.Display(FormDataSet.PlotBananaFunction(new NewtonMethodWithBacktracking
+            form.Display(FormDataSet.PlotBananaFunction(new SimpleNewtonMethod
             {
                 ddf = FormDataSet.BananaFunctionSecondDerivatives,
-                Tracker = new IterationsTracker()
+                Tracker = new IterationsTracker(),
+                Alpha = 0.5
+                
             }));
 
             form.ShowDialog();
