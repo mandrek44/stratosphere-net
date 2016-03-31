@@ -213,6 +213,53 @@ namespace Stratosphere.Math
             return new ColumnMajorMatrix(maxes, dimension == 0 ? new[] { 1, _dimensions[1] } : new[] { _dimensions[0], 1 });
         }
 
+        public Matrix Inverse()
+        {
+            if (Width != Height)
+                throw new NotSupportedException("Only square matrices are supported");
+
+            if (Width == 2)
+            {
+
+                var a = this[0, 0];
+                var b = this[1, 0];
+                var c = this[0, 1];
+                var d = this[1 ,1];
+
+                return Vector(d, -c).Concat(Vector(-b, a)) / (a * d - b * c);
+            }
+            else if (Width == 3)
+            {
+                var a = this[0, 0];
+                var b = this[0, 1];
+                var c = this[0, 2];
+                var d = this[1, 0];
+                var e = this[1, 1];
+                var f = this[1, 2];
+                var g = this[2, 0];
+                var h = this[2, 1];
+                var i = this[2, 2];
+
+                var A = e * i - f * h;
+                var B = -d * i + f * g;
+                var C = d * h - e * g;
+                var D = -b * i + c * h;
+                var E = a * i - c * g;
+                var F = -a * h + b * g;
+                var G = b * f - c * e;
+                var H = -a * f + c * d;
+                var I = a * e - b * d;
+
+                var detA = a * A + b * B + c * C;
+
+                return Vector(A, B, C).Concat(Vector(D, E, F)).Concat(Vector(G, H, I)) / detA;
+            }
+            else
+            {
+                throw new NotSupportedException("Only 2 x 2 or 3 x 3 matrices supported.");
+            }
+        }
+
         public override string ToString()
         {
             var builder = new StringBuilder();

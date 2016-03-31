@@ -31,12 +31,13 @@
             this.buttonRegression = new System.Windows.Forms.Button();
             this.buttonXSquared = new System.Windows.Forms.Button();
             this.buttonBanana = new System.Windows.Forms.Button();
+            this.buttonNewton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonRegression
             // 
             this.buttonRegression.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonRegression.Location = new System.Drawing.Point(53, 70);
+            this.buttonRegression.Location = new System.Drawing.Point(53, 73);
             this.buttonRegression.Name = "buttonRegression";
             this.buttonRegression.Size = new System.Drawing.Size(126, 23);
             this.buttonRegression.TabIndex = 1;
@@ -47,7 +48,7 @@
             // buttonXSquared
             // 
             this.buttonXSquared.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonXSquared.Location = new System.Drawing.Point(53, 41);
+            this.buttonXSquared.Location = new System.Drawing.Point(53, 44);
             this.buttonXSquared.Name = "buttonXSquared";
             this.buttonXSquared.Size = new System.Drawing.Size(126, 23);
             this.buttonXSquared.TabIndex = 0;
@@ -58,7 +59,7 @@
             // buttonBanana
             // 
             this.buttonBanana.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonBanana.Location = new System.Drawing.Point(53, 99);
+            this.buttonBanana.Location = new System.Drawing.Point(53, 102);
             this.buttonBanana.Name = "buttonBanana";
             this.buttonBanana.Size = new System.Drawing.Size(126, 23);
             this.buttonBanana.TabIndex = 2;
@@ -66,11 +67,23 @@
             this.buttonBanana.UseVisualStyleBackColor = true;
             this.buttonBanana.Click += new System.EventHandler(this.buttonBanana_Click);
             // 
+            // buttonNewton
+            // 
+            this.buttonNewton.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonNewton.Location = new System.Drawing.Point(53, 131);
+            this.buttonNewton.Name = "buttonNewton";
+            this.buttonNewton.Size = new System.Drawing.Size(126, 23);
+            this.buttonNewton.TabIndex = 3;
+            this.buttonNewton.Text = "Newton\'s Method";
+            this.buttonNewton.UseVisualStyleBackColor = true;
+            this.buttonNewton.Click += new System.EventHandler(this.buttonNewton_Click);
+            // 
             // ExerciseSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(235, 163);
+            this.ClientSize = new System.Drawing.Size(235, 191);
+            this.Controls.Add(this.buttonNewton);
             this.Controls.Add(this.buttonBanana);
             this.Controls.Add(this.buttonXSquared);
             this.Controls.Add(this.buttonRegression);
@@ -85,5 +98,6 @@
         private System.Windows.Forms.Button buttonRegression;
         private System.Windows.Forms.Button buttonXSquared;
         private System.Windows.Forms.Button buttonBanana;
+        private System.Windows.Forms.Button buttonNewton;
     }
 }
