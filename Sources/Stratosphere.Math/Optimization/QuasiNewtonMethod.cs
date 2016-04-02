@@ -84,7 +84,7 @@ namespace Stratosphere.Math.Optimization
 
     public class QuasiNewtonMethod : IOptimizationMethod
     {
-        public double Epsilon { get; } = 0.000001;
+        public double Epsilon { get; } = 0.00001;
         public int MaxIterations { get; }
 
         public IIterationsTracker Tracker { get; } = new EmptyIterationsTracker();
@@ -109,16 +109,15 @@ namespace Stratosphere.Math.Optimization
             Tracker.Track(initial);
 
             var x = initial;
-            var fx = f(x);
             for (int i = 0; i < MaxIterations; ++i)
             {
                 var dfx = df(x);
-                if (dfx.Length < Epsilon)
-                    return x;
-
                 var p = -H*dfx;
 
                 var x2 = BacktrackingLineSearch.Find(f, df, p, x, dfx).Evaluate();
+
+                if ((x2-x).Length < Epsilon)
+                    return x;
 
                 Tracker.Track(x);
                 
@@ -127,8 +126,8 @@ namespace Stratosphere.Math.Optimization
 
                 var H2 = H + (s*s.T)/(q.T*s) - (H*q*q.T*H.T)/(q.T*H*q);
 
-                H = H2;
-                x = x2;
+                H = H2.Evaluate();
+                x = x2.Evaluate();
             }
 
             return x;

@@ -59,21 +59,21 @@
             // buttonBanana
             // 
             this.buttonBanana.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonBanana.Location = new System.Drawing.Point(53, 102);
+            this.buttonBanana.Location = new System.Drawing.Point(53, 131);
             this.buttonBanana.Name = "buttonBanana";
             this.buttonBanana.Size = new System.Drawing.Size(126, 23);
-            this.buttonBanana.TabIndex = 2;
-            this.buttonBanana.Text = "Banana Optimization";
+            this.buttonBanana.TabIndex = 3;
+            this.buttonBanana.Text = "Quasi Newton";
             this.buttonBanana.UseVisualStyleBackColor = true;
             this.buttonBanana.Click += new System.EventHandler(this.buttonBanana_Click);
             // 
             // buttonNewton
             // 
             this.buttonNewton.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonNewton.Location = new System.Drawing.Point(53, 131);
+            this.buttonNewton.Location = new System.Drawing.Point(53, 102);
             this.buttonNewton.Name = "buttonNewton";
             this.buttonNewton.Size = new System.Drawing.Size(126, 23);
-            this.buttonNewton.TabIndex = 3;
+            this.buttonNewton.TabIndex = 2;
             this.buttonNewton.Text = "Newton\'s Method";
             this.buttonNewton.UseVisualStyleBackColor = true;
             this.buttonNewton.Click += new System.EventHandler(this.buttonNewton_Click);

@@ -127,10 +127,14 @@ namespace Stratosphere.MachineLearning.Studio
             var historyLine = new LineSeries() { MarkerType = MarkerType.Cross };
             var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross, MarkerStrokeThickness = 5 };
             double lastF = double.MaxValue;
+            var lastHistoryEntry = findMethod.Tracker.History.Last();
             foreach (var historyX in findMethod.Tracker.History)
             {
                 var f = BananaFunction(historyX);
-                historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: f < lastF + 0.001 ? -30 : -50));
+                if (historyX != lastHistoryEntry)
+                    historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: f < lastF + 0.001 ? -30 : -50));
+                else
+                    historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: -40));
                 historyLine.Points.Add(new DataPoint(historyX[0], historyX[1]));
 
                 lastF = f;
