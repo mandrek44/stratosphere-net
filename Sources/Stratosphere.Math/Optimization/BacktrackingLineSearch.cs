@@ -5,7 +5,7 @@ namespace Stratosphere.Math.Optimization
     public class BacktrackingLineSearch
     {
         private const double K = 0.5;
-        private const double C = 0.5;
+        private const double C = 0.001;
         private const double C2 = 0.9;
         private const double Epsilon = 0;
 
@@ -28,12 +28,11 @@ namespace Stratosphere.Math.Optimization
 
             // Simple implementation of Wolfe conditions
             // TODO: Implement algorithm from page 60 in "Numerical Optimization", J. Nocedal, S.J. Wright
-            while (!Armijo(f, x0, fx0, dfx_start, p, alpha) && i < 16)
+            while (
+                !Armijo(f, x0, fx0, dfx_start, p, alpha)
+                && Curvature(df, p, dfx_start, x0, alpha)
+                && i < 16)
             {
-                var wolfie = df(x0 + alpha * p).T * p >= C2 * dfx_start.T * p;
-                if (!wolfie)
-                    break;
-
                 alpha = K * alpha;
                 i++;
             }
@@ -45,5 +44,11 @@ namespace Stratosphere.Math.Optimization
         {
             return f(x0 + alpha * p) <= fx0 + C * alpha * (dfx0.T * p) + Epsilon;
         }
+
+        private static bool Curvature(Func<Matrix, Matrix> df, Matrix p, Matrix dfx_start, Matrix x0, double alpha)
+        {
+            return df(x0 + alpha * p).T * p >= C2 * dfx_start.T * p;
+        }
+
     }
 }
