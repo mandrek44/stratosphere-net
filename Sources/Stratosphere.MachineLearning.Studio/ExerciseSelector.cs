@@ -55,5 +55,33 @@ namespace Stratosphere.MachineLearning.Studio
 
             form.ShowDialog();
         }
+
+        private void buttonBacktrackGradient_Click(object sender, EventArgs e)
+        {
+            var form = new FormDataSet();
+            form.Display(FormDataSet.PlotBananaFunction(new BacktrackingSteepestDescentMethod(trackProgres: true, maxIterations: 2000)));
+
+            form.ShowDialog();
+        }
+
+        private void buttonNewtonBactrack_Click(object sender, EventArgs e)
+        {
+            var form = new FormDataSet();
+            form.Display(FormDataSet.PlotBananaFunction(new NewtonMethodWithBacktracking
+            {
+                ddf = FormDataSet.BananaFunctionSecondDerivatives,
+                Tracker = new IterationsTracker(),
+            }));
+
+            form.ShowDialog();
+        }
+
+        private void buttonLogistic_Click(object sender, EventArgs e)
+        {
+            var form = new FormDataSet();
+            form.Display(FormDataSet.LogisticRegression());
+
+            form.ShowDialog();
+        }
     }
 }

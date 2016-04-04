@@ -111,12 +111,12 @@ namespace Stratosphere.MachineLearning.Studio
         public static Matrix BananaFunctionSecondDerivatives(Matrix x)
         {
             // http://www.wolframalpha.com/input/?i=d%2Fdx(+100*((y+-+x%5E2)%5E2)+%2B+(1-x)%5E2)
-            var dxx = 1200*x[0]*x[0] - 400*x[1] + 2;
-            var dxy = -400*x[0];
+            var dxx = 1200 * x[0] * x[0] - 400 * x[1] + 2;
+            var dxy = -400 * x[0];
 
-            var dyx = -400*x[0];
+            var dyx = -400 * x[0];
             var dyy = 200;
-            
+
             return Matrix.Vector(dxx, dyx).Concat(Matrix.Vector(dxy, dyy));
         }
 
@@ -199,6 +199,20 @@ namespace Stratosphere.MachineLearning.Studio
             var error = (X * theta - y);
             var a = (Matrix.Ones(theta.Height, 1) * error.Transpose()).Transpose().MultiplyEach(X);
             return a.Sum(0).Transpose();
+        }
+
+        public static PlotModel LogisticRegression()
+        {
+            var planetsData = ColumnMajorMatrix.Parse(File.ReadAllText(@"DataSets\swapi_planets_filtered.txt"));
+            var model = new PlotModel { Title = "Star Wars Planets (diameter vs period)" };
+
+            var rockPlanets = planetsData.FilterRows(row => Abs(row[0, 5]) < 0.00001).Evaluate();
+            var gasPlanets = planetsData.FilterRows(row => Abs(row[0, 5] - 1) < 0.00001).Evaluate();
+
+            model.Scatter(rockPlanets.GetColumn(0) * 0.001, rockPlanets.GetColumn(1) * 0.1, MarkerType.Diamond);
+            model.Scatter(gasPlanets.GetColumn(0) * 0.001, gasPlanets.GetColumn(1) * 0.1, MarkerType.Circle);
+
+            return model;
         }
     }
 }
