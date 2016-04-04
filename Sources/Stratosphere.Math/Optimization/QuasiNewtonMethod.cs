@@ -97,7 +97,7 @@ namespace Stratosphere.Math.Optimization
                 Tracker = new IterationsTracker();
         }
 
-        public static Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix x0, double alpha, int maxIterations)
+        public static Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix x0, int maxIterations)
         {
             return new QuasiNewtonMethod(maxIterations).Find(f, df, x0);
         }

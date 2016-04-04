@@ -61,7 +61,7 @@ namespace Stratosphere.Math
 
         public static Matrix operator -(Matrix a) => a.Map(v => -v);
         public static Matrix operator -(Matrix a, Matrix b) => a.Substract(b);
-        public static Matrix operator -(double scalar, Matrix a) => a.Map(v => v - scalar);
+        public static Matrix operator -(double scalar, Matrix a) => a.Map(v => scalar - v);
         public static Matrix operator -(Matrix a, double scalar) => a.Map(v => v - scalar);
         public static Matrix operator +(Matrix a, Matrix b) => a.Add(b);
         public static Matrix operator +(double scalar, Matrix a) => a.Map(v => v + scalar);
@@ -258,7 +258,7 @@ namespace Stratosphere.Math
             }
             else
             {
-                throw new NotSupportedException("Only 2 x 2 or 3 x 3 matrices supported.");
+                throw new NotSupportedException("Only 2 x 2 or 3 x 3 matrices are supported.");
             }
         }
 

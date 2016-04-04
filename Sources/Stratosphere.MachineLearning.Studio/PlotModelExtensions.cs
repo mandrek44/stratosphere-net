@@ -31,16 +31,20 @@ namespace Stratosphere.MachineLearning.Studio
             return scatterSeries;
         }
 
-        public static LineSeries Function(this PlotModel plot, Matrix dx, Func<double, double> f) => Function(plot, dx.Min(), dx.Max(), f);
+        public static LineSeries Function(this PlotModel plot, Func<double, double> f, Matrix x) => Function(plot, f, x.Min(), x.Max());
+        public static LineSeries Function(this PlotModel plot, Func<double, double> f, Matrix x, Matrix y) => Function(plot, f, x.Min(), x.Max(), y.Min(), y.Max());
 
-        public static LineSeries Function(this PlotModel plot, double minX, double maxX, Func<double, double> f)
+        public static LineSeries Function(this PlotModel plot, Func<double, double> f, double minX, double maxX, double minY = double.MinValue, double maxY = double.MaxValue)
         {
             double step = (maxX - minX) / 100;
             var lineSeries = new LineSeries();
 
             for (double x = minX, fx = f(x); x <= maxX; x += step, fx = f(x))
             {
-                lineSeries.Points.Add(new DataPoint(x, f(x)));
+                if (fx < minY || fx > maxY)
+                    continue;
+
+                lineSeries.Points.Add(new DataPoint(x, fx));
             }
 
             lineSeries.Color = OxyPalettes.Hot(3).Colors.First();
@@ -52,7 +56,7 @@ namespace Stratosphere.MachineLearning.Studio
 
         public static LineSeries Polynomial(this PlotModel plot, Matrix X, Matrix coefficients)
         {
-            return Function(plot, X, x =>
+            return Function(plot, x =>
             {
                 double polynomialValue = 0;
                 double xPower = 1;
@@ -64,7 +68,7 @@ namespace Stratosphere.MachineLearning.Studio
                 }
 
                 return polynomialValue;
-            });
+            }, X);
         }
 
         public static HeatMapSeries HeatMap(this PlotModel model, Matrix dx1, Matrix dx2, Func<Matrix, double> f) =>

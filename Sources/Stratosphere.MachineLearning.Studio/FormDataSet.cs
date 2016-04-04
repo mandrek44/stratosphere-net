@@ -60,7 +60,7 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var model = new PlotModel { Title = "f(x) = x^2", LegendFontSize = 20.5, LegendPosition = LegendPosition.TopCenter };
 
-            model.Function(-2, 2, v => v * v);
+            model.Function(v => v * v, -2, 2);
 
             return model;
         }
@@ -157,7 +157,6 @@ namespace Stratosphere.MachineLearning.Studio
                 _theta => ComputeCost(X, y, _theta),
                 _theta => Gradient(X, y, _theta),
                 Matrix.Ones(X.Width, 1),
-                1,
                 1000);
 
             var line = model.Polynomial(diameters, theta);
@@ -170,7 +169,7 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var theta = LinearRegression(diameters, y);
 
-            var line = model.Function(diameters, x => theta[0] + theta[1] * x);
+            var line = model.Function(x => theta[0] + theta[1] * x, diameters);
 
             line.Title = ComputeCost(Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate(), y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[0];
@@ -183,7 +182,6 @@ namespace Stratosphere.MachineLearning.Studio
                 f: theta => ComputeCost(X, y, theta),
                 df: theta => Gradient(X, y, theta),
                 x0: Matrix.Ones(X.Width, 1),
-                alpha: 0.0001,
                 maxIterations: 1000);
         }
 
@@ -203,16 +201,62 @@ namespace Stratosphere.MachineLearning.Studio
 
         public static PlotModel LogisticRegression()
         {
-            var planetsData = ColumnMajorMatrix.Parse(File.ReadAllText(@"DataSets\swapi_planets_filtered.txt"));
+
             var model = new PlotModel { Title = "Star Wars Planets (diameter vs period)" };
 
-            var rockPlanets = planetsData.FilterRows(row => Abs(row[0, 5]) < 0.00001).Evaluate();
-            var gasPlanets = planetsData.FilterRows(row => Abs(row[0, 5] - 1) < 0.00001).Evaluate();
+            var planetsData = ColumnMajorMatrix.Parse(File.ReadAllText(@"DataSets\swapi_planets_filtered.txt"));
+            var data = (planetsData.GetColumn(0) * 0.001).Concat(planetsData.GetColumn(1) * 0.1).Concat(planetsData.GetColumn(5)).Evaluate();
 
-            model.Scatter(rockPlanets.GetColumn(0) * 0.001, rockPlanets.GetColumn(1) * 0.1, MarkerType.Diamond);
-            model.Scatter(gasPlanets.GetColumn(0) * 0.001, gasPlanets.GetColumn(1) * 0.1, MarkerType.Circle);
+            //var data = ColumnMajorMatrix.Parse(File.ReadAllText(@"DataSets\mlEx2.txt"));
+
+            var set0 = data.FilterRows(row => Abs(row[0, 2]) < 0.00001).Evaluate();
+            var set1 = data.FilterRows(row => Abs(row[0, 2] - 1) < 0.00001).Evaluate();
+
+            var X = Matrix.Ones(data.Height, 1)
+                .Concat(data.GetColumn(0))
+                .Concat(data.GetColumn(1))
+                .Evaluate();
+            var y = data.GetColumn(2).Evaluate();
+
+            model.Scatter(set0.GetColumn(0), set0.GetColumn(1), MarkerType.Diamond);
+            model.Scatter(set1.GetColumn(0), set1.GetColumn(1), MarkerType.Circle);
+
+            var lTheta = QuasiNewtonMethod.Find(
+                f: theta => LogisticCost(X, y, theta),
+                df: theta => LogisticGradient(X, y, theta),
+                x0: Matrix.Zeros(X.Width, 1),
+                maxIterations: 1000);
+
+            var line = model.Function(x => -(lTheta[0] + lTheta[1] * x ) / lTheta[2],
+                data.GetColumn(0), data.GetColumn(1));
+
+            line.Title = ComputeCost(X, y, lTheta).ToString("0.0000");
+            line.Color = OxyPalettes.Hot(3).Colors[1];
 
             return model;
+        }
+
+        public static double Sigmoid(double x) => 1.0 / (1.0 + Exp(-x));
+
+        public static Matrix Sigmoid(Matrix x) => x.Map(Sigmoid);
+
+        public static double LogisticCost(Matrix X, Matrix y, Matrix theta)
+        {
+            var m = X.Height;
+            var h = Sigmoid(theta.T * X.T).T;
+            return (-y.MultiplyEach(h.Map(Log)) - (1 - y).MultiplyEach((1 - h).Map(Log))).Sum() / m;
+        }
+
+        public static Matrix LogisticGradient(Matrix X, Matrix y, Matrix theta)
+        {
+            var m = X.Height;
+            var h = Sigmoid(theta.T * X.T).T;
+            var a = Matrix.Ones(theta.Height, 1);
+            var b = (h - y).T;
+            var tC = (a * b).T;
+            var grad = tC.MultiplyEach(X).Sum(0) / m;
+
+            return grad.T;
         }
     }
 }

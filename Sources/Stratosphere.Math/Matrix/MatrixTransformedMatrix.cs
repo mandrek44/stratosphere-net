@@ -11,6 +11,9 @@ namespace Stratosphere.Math
 
         public MatrixTransformedMatrix(Matrix matrix, Matrix transformationValue, Func<double, double, double> transformation) : base(matrix.Size)
         {
+            if (!matrix.Size.EqualTo(transformationValue.Size))
+                throw new InvalidOperationException("Matrices size must match");
+
             _matrix = matrix;
             _transformationValue = transformationValue;
             _transformation = transformation;

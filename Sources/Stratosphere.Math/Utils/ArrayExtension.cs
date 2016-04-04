@@ -10,6 +10,20 @@ namespace Stratosphere.Math
             return result;
         }
 
+        public static bool EqualTo(this int[] source, int[] other)
+        {
+            if (source.Length != other.Length)
+                return false;
+
+            for (int i = 0; i < source.Length; i++)
+            {
+                if (source[i] != other[i])
+                    return false;
+            }
+
+            return true;
+        }
+
         public static bool EqualTo(this double[] source, double[] other, double delta = 0.0001)
         {
             if (source.Length != other.Length)
