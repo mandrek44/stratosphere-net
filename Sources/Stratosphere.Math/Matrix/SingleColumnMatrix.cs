@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace Stratosphere.Math
 {
-    public class ColumnFilteredMatrix : Matrix
+    public class SingleColumnMatrix : Matrix
     {
         private readonly Matrix _matrix;
         private readonly int _column;
 
-        public ColumnFilteredMatrix(Matrix matrix, int column) : base(new int[] { matrix.Height, 1 })
+        public SingleColumnMatrix(Matrix matrix, int column) : base(new int[] { matrix.Height, 1 })
         {
             _matrix = matrix;
             _column = column;

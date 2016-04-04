@@ -85,7 +85,9 @@ namespace Stratosphere.Math
 
         public abstract double GetByCoordinates(int row, int column);
 
-        public Matrix GetColumn(int column) => new ColumnFilteredMatrix(this, column);
+        public Matrix GetColumn(int column) => new SingleColumnMatrix(this, column);
+
+        public Matrix FilterRows(Func<Matrix, bool> func) => new RowFilteredMatrix(this, func);
 
         public virtual int[] Size => _dimensions;
 

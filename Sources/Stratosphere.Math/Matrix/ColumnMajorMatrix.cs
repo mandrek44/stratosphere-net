@@ -59,10 +59,5 @@ namespace Stratosphere.Math
                 return ((_data?.GetHashCode() ?? 0) * 397) ^ (Size?.GetHashCode() ?? 0);
             }
         }
-
-        public Matrix FilterRows(Func<Matrix, bool> func)
-        {
-            return new RowFilteredMatrix(this, func);
-        }
     }
 }

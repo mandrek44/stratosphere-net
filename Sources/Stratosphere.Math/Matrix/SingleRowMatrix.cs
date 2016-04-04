@@ -1,11 +1,11 @@
 namespace Stratosphere.Math
 {
-    public class SingleRowFromMatrix : Matrix
+    public class SingleRowMatrix : Matrix
     {
         private readonly Matrix _matrix;
         private readonly int _row;
 
-        public SingleRowFromMatrix(Matrix matrix, int row) : base(new[] { 1, matrix.Width })
+        public SingleRowMatrix(Matrix matrix, int row) : base(new[] { 1, matrix.Width })
         {
             _matrix = matrix;
             _row = row;

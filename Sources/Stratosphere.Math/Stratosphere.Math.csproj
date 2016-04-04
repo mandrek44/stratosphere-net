@@ -42,13 +42,13 @@
   <ItemGroup>
     <Compile Include="Matrix\ColumnsConcatMatrix.cs" />
     <Compile Include="Matrix\RowFilteredMatrix.cs" />
-    <Compile Include="Matrix\SingleRowFromMatrix.cs" />
+    <Compile Include="Matrix\SingleRowMatrix.cs" />
     <Compile Include="Optimization\EmptyIterationsTracker.cs" />
     <Compile Include="Optimization\IIterationsTracker.cs" />
     <Compile Include="Optimization\IterationsTracker.cs" />
     <Compile Include="Optimization\QuasiNewtonMethod.cs" />
     <Compile Include="Utils\ArrayExtension.cs" />
-    <Compile Include="Matrix\ColumnFilteredMatrix.cs" />
+    <Compile Include="Matrix\SingleColumnMatrix.cs" />
     <Compile Include="Optimization\BacktrackingLineSearch.cs" />
     <Compile Include="Optimization\BacktrackingSteepestDescentMethod.cs" />
     <Compile Include="Matrix\ColumnMajorMatrix.cs" />

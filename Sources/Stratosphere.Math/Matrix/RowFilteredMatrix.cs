@@ -15,7 +15,7 @@ namespace Stratosphere.Math
 
             for (int row = 0; row < matrix.Height; row++)
             {
-                if (predicate(new SingleRowFromMatrix(matrix, row)))
+                if (predicate(new SingleRowMatrix(matrix, row)))
                 {
                     _matchingRows.Add(row);
                 }
