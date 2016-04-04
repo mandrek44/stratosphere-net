@@ -31,7 +31,7 @@ namespace Stratosphere.MachineLearning.Studio
             return scatterSeries;
         }
 
-        public static LineSeries Function(this PlotModel plot, Func<double, double> f, Matrix x) => Function(plot, f, x.Min(), x.Max());
+        public static LineSeries Function(this PlotModel plot, Func<double, double> f, Matrix x) => Function(plot, f, x.Min(), x.Max(), Double.MinValue, Double.MaxValue);
         public static LineSeries Function(this PlotModel plot, Func<double, double> f, Matrix x, Matrix y) => Function(plot, f, x.Min(), x.Max(), y.Min(), y.Max());
 
         public static LineSeries Function(this PlotModel plot, Func<double, double> f, double minX, double maxX, double minY = double.MinValue, double maxY = double.MaxValue)
