@@ -47,6 +47,8 @@
     <Compile Include="Optimization\IIterationsTracker.cs" />
     <Compile Include="Optimization\IterationsTracker.cs" />
     <Compile Include="Optimization\QuasiNewtonMethod.cs" />
+    <Compile Include="Regression\LinearRegression.cs" />
+    <Compile Include="Regression\LogisticRegression.cs" />
     <Compile Include="Utils\ArrayExtension.cs" />
     <Compile Include="Matrix\SingleColumnMatrix.cs" />
     <Compile Include="Optimization\BacktrackingLineSearch.cs" />

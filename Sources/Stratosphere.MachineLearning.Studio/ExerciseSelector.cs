@@ -79,7 +79,7 @@ namespace Stratosphere.MachineLearning.Studio
         private void buttonLogistic_Click(object sender, EventArgs e)
         {
             var form = new FormDataSet();
-            form.Display(FormDataSet.LogisticRegression());
+            form.Display(FormDataSet.PlotLogisticRegression());
 
             form.ShowDialog();
         }

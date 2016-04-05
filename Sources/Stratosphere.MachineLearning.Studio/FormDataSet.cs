@@ -9,6 +9,7 @@ using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using Stratosphere.Math;
 using Stratosphere.Math.Optimization;
+using Stratosphere.Math.Regression;
 using static System.Math;
 
 namespace Stratosphere.MachineLearning.Studio
@@ -76,7 +77,7 @@ namespace Stratosphere.MachineLearning.Studio
 
             model.Scatter(diameters, y);
 
-            var theta = LinearRegression(diameters, y);
+            var theta = Math.Regression.LinearRegression.Calculate(diameters, y);
 
             var line = model.Polynomial(diameters, theta);
 
@@ -146,60 +147,30 @@ namespace Stratosphere.MachineLearning.Studio
 
         private static void PolynomialRegression(Matrix diameters, Matrix y, PlotModel model)
         {
-            var X = Matrix.Ones(diameters.Height, 1)
-                .Concat(diameters)
+            var X = diameters
                 .Concat(diameters.Map(x => x * x))
                 .Concat(diameters.Map(x => x * x * x))
                 .Concat(diameters.Map(x => x * x * x * x))
                 .Evaluate();
 
-            var theta = QuasiNewtonMethod.Find(
-                _theta => ComputeCost(X, y, _theta),
-                _theta => Gradient(X, y, _theta),
-                Matrix.Ones(X.Width, 1),
-                1000);
+            var theta = Math.Regression.LinearRegression.Calculate(X, y);
 
             var line = model.Polynomial(diameters, theta);
-
-            line.Title = ComputeCost(X, y, theta).ToString("0.0000");
+            line.Title = Math.Regression.LinearRegression.ComputeCost(X, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[1];
         }
 
         private static void LinearRegression(Matrix diameters, Matrix y, PlotModel model)
         {
-            var theta = LinearRegression(diameters, y);
+            var theta = Math.Regression.LinearRegression.Calculate(diameters, y);
 
             var line = model.Function(x => theta[0] + theta[1] * x, diameters);
 
-            line.Title = ComputeCost(Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate(), y, theta).ToString("0.0000");
+            line.Title = Math.Regression.LinearRegression.ComputeCost(diameters, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[0];
         }
 
-        private static Matrix LinearRegression(Matrix diameters, Matrix y)
-        {
-            var X = Matrix.Ones(diameters.Height, 1).Concat(diameters).Evaluate();
-            return QuasiNewtonMethod.Find(
-                f: theta => ComputeCost(X, y, theta),
-                df: theta => Gradient(X, y, theta),
-                x0: Matrix.Ones(X.Width, 1),
-                maxIterations: 1000);
-        }
-
-        private static double ComputeCost(Matrix X, Matrix y, Matrix theta)
-        {
-            var m = y.Height;
-            var error = X * theta - y;
-            return error.Map(v => v * v).Sum() / (2.0 * m);
-        }
-
-        private static Matrix Gradient(Matrix X, Matrix y, Matrix theta)
-        {
-            var error = (X * theta - y);
-            var a = (Matrix.Ones(theta.Height, 1) * error.Transpose()).Transpose().MultiplyEach(X);
-            return a.Sum(0).Transpose();
-        }
-
-        public static PlotModel LogisticRegression()
+        public static PlotModel PlotLogisticRegression()
         {
 
             var model = new PlotModel { Title = "Star Wars Planets (diameter vs period)" };
@@ -212,51 +183,20 @@ namespace Stratosphere.MachineLearning.Studio
             var set0 = data.FilterRows(row => Abs(row[0, 2]) < 0.00001).Evaluate();
             var set1 = data.FilterRows(row => Abs(row[0, 2] - 1) < 0.00001).Evaluate();
 
-            var X = Matrix.Ones(data.Height, 1)
-                .Concat(data.GetColumn(0))
-                .Concat(data.GetColumn(1))
-                .Evaluate();
-            var y = data.GetColumn(2).Evaluate();
-
             model.Scatter(set0.GetColumn(0), set0.GetColumn(1), MarkerType.Diamond);
             model.Scatter(set1.GetColumn(0), set1.GetColumn(1), MarkerType.Circle);
 
-            var lTheta = QuasiNewtonMethod.Find(
-                f: theta => LogisticCost(X, y, theta),
-                df: theta => LogisticGradient(X, y, theta),
-                x0: Matrix.Zeros(X.Width, 1),
-                maxIterations: 1000);
+            var y = data.GetColumn(2).Evaluate();
+            var X = data.GetColumn(0).Concat(data.GetColumn(1));
+            var theta = LogisticRegression.Calculate(X, y);
 
-            var line = model.Function(x => -(lTheta[0] + lTheta[1] * x ) / lTheta[2],
+            var line = model.Function(x => -(theta[0] + theta[1] * x ) / theta[2],
                 data.GetColumn(0), data.GetColumn(1));
 
-            line.Title = ComputeCost(X, y, lTheta).ToString("0.0000");
+            line.Title = LogisticRegression.Cost(X, y, theta).ToString("0.0000");
             line.Color = OxyPalettes.Hot(3).Colors[1];
 
             return model;
-        }
-
-        public static double Sigmoid(double x) => 1.0 / (1.0 + Exp(-x));
-
-        public static Matrix Sigmoid(Matrix x) => x.Map(Sigmoid);
-
-        public static double LogisticCost(Matrix X, Matrix y, Matrix theta)
-        {
-            var m = X.Height;
-            var h = Sigmoid(theta.T * X.T).T;
-            return (-y.MultiplyEach(h.Map(Log)) - (1 - y).MultiplyEach((1 - h).Map(Log))).Sum() / m;
-        }
-
-        public static Matrix LogisticGradient(Matrix X, Matrix y, Matrix theta)
-        {
-            var m = X.Height;
-            var h = Sigmoid(theta.T * X.T).T;
-            var a = Matrix.Ones(theta.Height, 1);
-            var b = (h - y).T;
-            var tC = (a * b).T;
-            var grad = tC.MultiplyEach(X).Sum(0) / m;
-
-            return grad.T;
         }
     }
 }
