@@ -220,9 +220,13 @@ namespace Stratosphere.Math
             if (Width != Height)
                 throw new NotSupportedException("Only square matrices are supported");
 
+            if (Width == 1)
+            {
+                return Vector(1.0/this[0]);
+            }
+
             if (Width == 2)
             {
-
                 var a = this[0, 0];
                 var b = this[1, 0];
                 var c = this[0, 1];
@@ -230,7 +234,8 @@ namespace Stratosphere.Math
 
                 return Vector(d, -c).Concat(Vector(-b, a)) / (a * d - b * c);
             }
-            else if (Width == 3)
+
+            if (Width == 3)
             {
                 var a = this[0, 0];
                 var b = this[0, 1];
@@ -258,7 +263,7 @@ namespace Stratosphere.Math
             }
             else
             {
-                throw new NotSupportedException("Only 2 x 2 or 3 x 3 matrices are supported.");
+                throw new NotSupportedException("Only 1 x 1, 2 x 2 or 3 x 3 matrices are supported.");
             }
         }
 

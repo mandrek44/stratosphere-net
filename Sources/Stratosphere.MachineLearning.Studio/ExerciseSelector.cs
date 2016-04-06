@@ -37,7 +37,11 @@ namespace Stratosphere.MachineLearning.Studio
         private void buttonBanana_Click(object sender, EventArgs e)
         {
             var form = new FormDataSet();
-            form.Display(FormDataSet.PlotBananaFunction(new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500)));
+            form.Display(FormDataSet.PlotBananaFunction(
+                new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500)
+                {
+                    // InitialH = FormDataSet.BananaFunctionSecondDerivatives("-2;0").Inverse()
+                }));
 
             form.ShowDialog();
         }

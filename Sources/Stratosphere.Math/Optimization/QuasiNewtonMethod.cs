@@ -2,90 +2,12 @@ using System;
 
 namespace Stratosphere.Math.Optimization
 {
-    public class SimpleNewtonMethod : IOptimizationMethod
-    {
-        public IIterationsTracker Tracker { get; set; } = new EmptyIterationsTracker();
-
-        public double Epsilon { get; set; } = 0.00001;
-
-        public int MaxIterations { get; set; } = 1000;
-
-        public double Alpha { get; set; } = 1;
-
-        public Func<Matrix, Matrix> ddf { get; set; }
-
-        public Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Func<Matrix, Matrix> ddf, Matrix initial)
-        {
-            this.ddf = ddf;
-            return Find(f, df, initial);
-        }
-
-        public Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix initial)
-        {
-            Tracker.Track(initial);
-
-            var x = initial;
-            for (int i = 0; i < MaxIterations; ++i)
-            {
-                var dfx = df(x);
-                var x2 = x - Alpha * ddf(x).Inverse() * dfx;
-
-                Tracker.Track(x2);
-
-                if ((x2 - x).Length < Epsilon)
-                    return x2;
-
-                x = x2;
-            }
-
-            return x;
-        }
-    }
-
-    public class NewtonMethodWithBacktracking : IOptimizationMethod
-    {
-        public IIterationsTracker Tracker { get; set; } = new EmptyIterationsTracker();
-
-        public double Epsilon { get; set; } = 0.00001;
-
-        public int MaxIterations { get; set; } = 1000;
-
-        public Func<Matrix, Matrix> ddf { get; set; }
-
-        public Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Func<Matrix, Matrix> ddf, Matrix initial)
-        {
-            this.ddf = ddf;
-            return Find(f, df, initial);
-        }
-
-        public Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df , Matrix initial)
-        {
-            Tracker.Track(initial);
-
-            var x = initial;
-            for (int i = 0; i < MaxIterations; ++i)
-            {
-                var dfx = df(x);
-                var p = -ddf(x).Inverse()*dfx;
-
-                var x2 = BacktrackingLineSearch.Find(f, df, p, x, dfx).Evaluate();
-
-                Tracker.Track(x2);
-
-                if ((x2 - x).Length < Epsilon)
-                    return x2;
-
-                x = x2;
-            }
-
-            return x;
-        }
-    }
-
     public class QuasiNewtonMethod : IOptimizationMethod
     {
         public double Epsilon { get; } = 0.00001;
         public int MaxIterations { get; }
+
+        public Matrix InitialH { get; set; }
 
         public IIterationsTracker Tracker { get; } = new EmptyIterationsTracker();
 
@@ -104,33 +26,34 @@ namespace Stratosphere.Math.Optimization
 
         public Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix initial)
         {
-            var H = Matrix.Identity(initial.Height);
+            var H = InitialH ?? Matrix.Identity(initial.Height);
 
             Tracker.Track(initial);
 
-            var x = initial;
+            var x1 = initial;
             for (int i = 0; i < MaxIterations; ++i)
             {
-                var dfx = df(x);
-                var p = -H*dfx;
+                var dfx = df(x1);
+                var p = -H * dfx;
 
-                var x2 = BacktrackingLineSearch.Find(f, df, p, x, dfx).Evaluate();
+                var x2 = BacktrackingLineSearch.Find(f, df, p, x1, dfx).Evaluate();
 
-                if ((x2-x).Length < Epsilon)
-                    return x;
+                if ((x2 - x1).Length < Epsilon)
+                    return x1;
 
-                Tracker.Track(x);
-                
-                var q = df(x2) - dfx;
-                var s = x2 - x;
+                Tracker.Track(x1);
 
-                var H2 = H + (s*s.T)/(q.T*s) - (H*q*q.T*H.T)/(q.T*H*q);
+                var dfx1 = df(x1);
+                var q = df(x2) - dfx1;
+                var s = x2 - x1;
 
-                H = H2.Evaluate();
-                x = x2.Evaluate();
+                H = H + (s * s.T) / (q.T * s) - (H * q * q.T * H.T) / (q.T * H * q);
+
+                H = H.Evaluate();
+                x1 = x2.Evaluate();
             }
 
-            return x;
+            return x1;
         }
     }
 }

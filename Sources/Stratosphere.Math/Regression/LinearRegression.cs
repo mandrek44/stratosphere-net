@@ -27,7 +27,7 @@ namespace Stratosphere.Math.Regression
         {
             X = Matrix.Ones(X.Height, 1).Concat(X).Evaluate();
             return QuasiNewtonMethod.Find(
-                f: theta => _ComputeCost(X, y, theta),
+                f: theta => ComputeCost_(X, y, theta),
                 df: theta => Gradient(X, y, theta),
                 x0: Initial ?? Matrix.Ones(X.Width, 1),
                 maxIterations: MaxIterations);
@@ -35,10 +35,10 @@ namespace Stratosphere.Math.Regression
 
         public static double ComputeCost(Matrix X, Matrix y, Matrix theta)
         {
-            return _ComputeCost(Matrix.Ones(X.Height, 1).Concat(X), y, theta);
+            return ComputeCost_(Matrix.Ones(X.Height, 1).Concat(X), y, theta);
         }
 
-        private static double _ComputeCost(Matrix X, Matrix y, Matrix theta)
+        private static double ComputeCost_(Matrix X, Matrix y, Matrix theta)
         {
             var m = y.Height;
             var error = X * theta - y;

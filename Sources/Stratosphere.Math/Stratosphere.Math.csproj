@@ -45,8 +45,11 @@
     <Compile Include="Matrix\SingleRowMatrix.cs" />
     <Compile Include="Optimization\EmptyIterationsTracker.cs" />
     <Compile Include="Optimization\IIterationsTracker.cs" />
+    <Compile Include="Optimization\IOptimizationMethod.cs" />
     <Compile Include="Optimization\IterationsTracker.cs" />
+    <Compile Include="Optimization\NewtonMethodWithBacktracking.cs" />
     <Compile Include="Optimization\QuasiNewtonMethod.cs" />
+    <Compile Include="Optimization\SimpleNewtonMethod.cs" />
     <Compile Include="Regression\LinearRegression.cs" />
     <Compile Include="Regression\LogisticRegression.cs" />
     <Compile Include="Utils\ArrayExtension.cs" />
