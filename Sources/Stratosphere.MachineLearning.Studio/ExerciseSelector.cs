@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Stratosphere.Math.Formulas;
 using Stratosphere.Math.Optimization;
 
 namespace Stratosphere.MachineLearning.Studio
@@ -40,7 +41,7 @@ namespace Stratosphere.MachineLearning.Studio
             form.Display(FormDataSet.PlotBananaFunction(
                 new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500)
                 {
-                    // InitialH = FormDataSet.BananaFunctionSecondDerivatives("-2;0").Inverse()
+                    // InitialH = FormDataSet.SecondDerivative("-2;0").Inverse()
                 }));
 
             form.ShowDialog();
@@ -51,7 +52,7 @@ namespace Stratosphere.MachineLearning.Studio
             var form = new FormDataSet();
             form.Display(FormDataSet.PlotBananaFunction(new SimpleNewtonMethod
             {
-                ddf = FormDataSet.BananaFunctionSecondDerivatives,
+                ddf = Rosenbrock.SecondDerivative,
                 Tracker = new IterationsTracker(),
                 Alpha = 0.5
                 
@@ -73,7 +74,7 @@ namespace Stratosphere.MachineLearning.Studio
             var form = new FormDataSet();
             form.Display(FormDataSet.PlotBananaFunction(new NewtonMethodWithBacktracking
             {
-                ddf = FormDataSet.BananaFunctionSecondDerivatives,
+                ddf = Rosenbrock.SecondDerivative,
                 Tracker = new IterationsTracker(),
             }));
 

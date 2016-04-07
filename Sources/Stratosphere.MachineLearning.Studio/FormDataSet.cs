@@ -8,6 +8,7 @@ using OxyPlot.Axes;
 using OxyPlot.Series;
 using OxyPlot.WindowsForms;
 using Stratosphere.Math;
+using Stratosphere.Math.Formulas;
 using Stratosphere.Math.Optimization;
 using Stratosphere.Math.Regression;
 using static System.Math;
@@ -34,24 +35,11 @@ namespace Stratosphere.MachineLearning.Studio
             Controls.Add(plotView);
         }
 
-        public static PlotModel PlotBananaFunction()
-        {
-            var model = new PlotModel();
-
-            model.HeatMap(-2.0, 2.0, -1, 3, x => Log(BananaFunction(x)));
-
-            //PlotOptimizationSteps(model, new SimpleSteepestDescentMethod(trackProgres: true, maxIterations: 1500));
-            //PlotOptimizationSteps(model, new BacktrackingSteepestDescentMethod(trackProgres: true, maxIterations: 1500));
-            PlotOptimizationSteps(model, new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500));
-
-            return model;
-        }
-
         public static PlotModel PlotBananaFunction(IOptimizationMethod method)
         {
             var model = new PlotModel();
 
-            model.HeatMap(-2.0, 2.0, -1, 3, x => Log(BananaFunction(x)));
+            model.HeatMap(-2.0, 2.0, -1, 3, x => Log(Rosenbrock.Function(x)));
             PlotOptimizationSteps(model, method);
 
             return model;
@@ -90,40 +78,9 @@ namespace Stratosphere.MachineLearning.Studio
             return model;
         }
 
-        private static double BananaFunction(Matrix x)
-        {
-            var a = x[1] - (x[0] * x[0]);
-            var b = 1 - x[0];
-
-            return 100 * a * a + b * b;
-        }
-
-        public static Matrix BananaFunctionDerivatives(Matrix x)
-        {
-            // http://www.wolframalpha.com/input/?i=d%2Fdx(+100*((y+-+x%5E2)%5E2)+%2B+(1-x)%5E2)
-            var dx = 2 * (200 * x[0] * x[0] * x[0] - 200 * x[0] * x[1] + x[0] - 1);
-
-            // http://www.wolframalpha.com/input/?i=d%2Fdy(+100*((y+-+x%5E2)%5E2)+%2B+(1-x)%5E2)
-            var dy = 200 * (x[1] - x[0] * x[0]);
-
-            return Matrix.Vector(dx, dy);
-        }
-
-        public static Matrix BananaFunctionSecondDerivatives(Matrix x)
-        {
-            // http://www.wolframalpha.com/input/?i=d%2Fdx(+100*((y+-+x%5E2)%5E2)+%2B+(1-x)%5E2)
-            var dxx = 1200 * x[0] * x[0] - 400 * x[1] + 2;
-            var dxy = -400 * x[0];
-
-            var dyx = -400 * x[0];
-            var dyy = 200;
-
-            return Matrix.Vector(dxx, dyx).Concat(Matrix.Vector(dxy, dyy));
-        }
-
         private static void PlotOptimizationSteps(PlotModel model, IOptimizationMethod findMethod)
         {
-            findMethod.Find(BananaFunction, BananaFunctionDerivatives, "-2;0");
+            findMethod.Find(Rosenbrock.Function, Rosenbrock.Derivative, "-2;0");
 
             var historyLine = new LineSeries() { MarkerType = MarkerType.Cross };
             var historyPoints = new ScatterSeries() { MarkerType = MarkerType.Cross, MarkerStrokeThickness = 5 };
@@ -131,7 +88,7 @@ namespace Stratosphere.MachineLearning.Studio
             var lastHistoryEntry = findMethod.Tracker.History.Last();
             foreach (var historyX in findMethod.Tracker.History)
             {
-                var f = BananaFunction(historyX);
+                var f = Rosenbrock.Function(historyX);
                 if (historyX != lastHistoryEntry)
                     historyPoints.Points.Add(new ScatterPoint(historyX[0], historyX[1], value: f < lastF + 0.001 ? -30 : -50));
                 else

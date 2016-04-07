@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formulas\Rosenbrock.cs" />
     <Compile Include="Matrix\ColumnsConcatMatrix.cs" />
     <Compile Include="Matrix\RowFilteredMatrix.cs" />
     <Compile Include="Matrix\SingleRowMatrix.cs" />
