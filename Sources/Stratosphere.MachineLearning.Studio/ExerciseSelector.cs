@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Stratosphere.Math.Formulas;
 using Stratosphere.Math.Optimization;
@@ -39,10 +32,7 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var form = new FormDataSet();
             form.Display(FormDataSet.PlotBananaFunction(
-                new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500)
-                {
-                    // InitialH = FormDataSet.SecondDerivative("-2;0").Inverse()
-                }));
+                new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500)));
 
             form.ShowDialog();
         }

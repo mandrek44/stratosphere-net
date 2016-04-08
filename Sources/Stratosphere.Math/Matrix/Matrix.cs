@@ -228,8 +228,8 @@ namespace Stratosphere.Math
             if (Width == 2)
             {
                 var a = this[0, 0];
-                var b = this[1, 0];
-                var c = this[0, 1];
+                var b = this[0, 1];
+                var c = this[1, 0];
                 var d = this[1 ,1];
 
                 return Vector(d, -c).Concat(Vector(-b, a)) / (a * d - b * c);

@@ -115,5 +115,17 @@ namespace Stratosphere.Tests.Math
         {
             Assert.AreEqual((ColumnMajorMatrix)"0;1", _matrix.Min(1));
         }
+
+        [Test]
+        public void Then_column_can_be_concated()
+        {
+            Assert.AreEqual((Matrix)"0 2;1 3", _matrix.GetColumn(0).Concat(_matrix.GetColumn(1)));
+        }
+
+        [Test]
+        public void Then_length_can_be_calculated()
+        {
+            Assert.AreEqual(1, _matrix.GetColumn(0).Length, 0.001);
+        }
     }
 }
