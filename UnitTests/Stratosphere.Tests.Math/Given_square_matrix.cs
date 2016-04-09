@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using Stratosphere.Math;
 
@@ -5,7 +6,7 @@ namespace Stratosphere.Tests.Math
 {
     public class Given_square_matrix
     {
-        private ColumnMajorMatrix _matrix;
+        private Matrix _matrix;
 
         [SetUp]
         public void Given_test_matrix()

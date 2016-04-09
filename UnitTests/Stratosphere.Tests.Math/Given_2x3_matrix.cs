@@ -43,13 +43,7 @@ namespace Stratosphere.Tests.Math
         {
             Assert.AreEqual((ColumnMajorMatrix)"0 4 8;2 6 10", 2 * _matrix);
         }
-
-        [Test]
-        public void Then_can_be_transposed()
-        {
-            Assert.AreEqual((ColumnMajorMatrix)"0 1;2 3;4 5", _matrix.Transpose());
-        }
-
+        
         [Test]
         public void Then_can_be_enumerated_by_columns()
         {
@@ -73,25 +67,7 @@ namespace Stratosphere.Tests.Math
         {
             Assert.AreEqual((ColumnMajorMatrix)"20;26", _matrix.Multiply("0;2;4"));
         }
-
-        [Test]
-        public void Then_can_be_substracted_by_other_matrix()
-        {
-            Assert.AreEqual((ColumnMajorMatrix)"0 -2 -4;-1 -3 -5", _matrix.Substract("0 4 8;2 6 10"));
-        }
-
-        [Test]
-        public void Then_column_can_be_retrieved()
-        {
-            Assert.AreEqual((ColumnMajorMatrix)"2;3", _matrix.GetColumn(1));
-        }
-
-        [Test]
-        public void Then_column_can_be_added()
-        {
-            Assert.AreEqual((ColumnMajorMatrix)"0 2 4 6;1 3 5 7", _matrix.Concat("6;7"));
-        }
-
+        
         [Test]
         public void Then_max_per_column_can_be_calculated()
         {
@@ -114,12 +90,6 @@ namespace Stratosphere.Tests.Math
         public void Then_min_per_row_can_be_calculated()
         {
             Assert.AreEqual((ColumnMajorMatrix)"0;1", _matrix.Min(1));
-        }
-
-        [Test]
-        public void Then_column_can_be_concated()
-        {
-            Assert.AreEqual((Matrix)"0 2;1 3", _matrix.GetColumn(0).Concat(_matrix.GetColumn(1)));
         }
 
         [Test]
