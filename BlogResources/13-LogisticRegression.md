@@ -9,7 +9,7 @@ Let's say we have a data set like the following:
 
 
 Notice that there are two subsets - the green diamonds and orange circles (i.e. rock planets and gas planets).
-With logistic regression, we can find such line that divides the two subsets as much as possible:
+With logistic regression, we can find such line that divides the two subsets in best possible way:
 
 ![](https://mandrostorage.blob.core.windows.net/blogfiles/Stratosphere.MachineLearning.Studio_2016-04-07_18-01-56.png)
 
