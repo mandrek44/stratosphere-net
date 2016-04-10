@@ -50,6 +50,7 @@
     <Compile Include="Given_matrix_multiplied_element_wise_by_matrix.cs" />
     <Compile Include="Given_matrix_plus_matrix.cs" />
     <Compile Include="Given_retrieved_column.cs" />
+    <Compile Include="Given_scalar_multiplied_matrix.cs" />
     <Compile Include="Given_simple_optimization_problem.cs" />
     <Compile Include="Given_single_element_matrix.cs" />
     <Compile Include="Given_square_matrix.cs" />

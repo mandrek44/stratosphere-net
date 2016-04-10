@@ -37,12 +37,6 @@ namespace Stratosphere.Tests.Math
         {
             return _matrix.EnumerateByRows().Skip(rowIndex).First();
         }
-
-        [Test]
-        public void Then_can_be_multiplied_by_scalar()
-        {
-            Assert.AreEqual((ColumnMajorMatrix)"0 4 8;2 6 10", 2 * _matrix);
-        }
         
         [Test]
         public void Then_can_be_enumerated_by_columns()
