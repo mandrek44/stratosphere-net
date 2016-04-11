@@ -1,4 +1,6 @@
 using Stratosphere.Math.Optimization;
+using static System.Math;
+using static Stratosphere.Math.Matrix;
 
 namespace Stratosphere.Math.Regression
 {
@@ -17,7 +19,7 @@ namespace Stratosphere.Math.Regression
                 maxIterations: 1000);
         }
 
-        public static double Sigmoid(double x) => 1.0 / (1.0 + System.Math.Exp(-x));
+        public static double Sigmoid(double x) => 1.0 / (1.0 + Exp(-x));
 
         public static Matrix Sigmoid(Matrix x) => x.Map(Sigmoid);
 
@@ -30,22 +32,21 @@ namespace Stratosphere.Math.Regression
         {
             var m = X.Height;
             var h = Sigmoid(theta.T * X.T).T;
-            
+
             return (
-                -y.MultiplyEach(h.Map(v => System.Math.Log(NonZero(v)))) 
-                -(1 - y).MultiplyEach((1 - h).Map(v => System.Math.Log(NonZero(v))))).Sum() / m;
+                -y.MultiplyEach(h.Map(v => Log(NonZero(v))))
+                - (1 - y).MultiplyEach((1 - h).Map(v => Log(NonZero(v))))).Sum() / m;
         }
 
         public static Matrix Gradient(Matrix X, Matrix y, Matrix theta)
         {
             var m = X.Height;
             var h = Sigmoid(theta.T * X.T).T;
-            var a = Matrix.Ones(theta.Height, 1);
-            var b = (h - y).T;
-            var tC = (a * b).T;
-            var grad = tC.MultiplyEach(X).Sum(0) / m;
 
-            return grad.T;
+            var temp = (Ones(theta.Height, 1) * (h - y).T).T;
+            var gradient = temp.MultiplyEach(X).Sum(0) / m;
+
+            return gradient.T;
         }
 
         private static double NonZero(double v)

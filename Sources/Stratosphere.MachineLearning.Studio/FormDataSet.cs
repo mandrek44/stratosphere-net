@@ -145,6 +145,7 @@ namespace Stratosphere.MachineLearning.Studio
 
             var y = data.GetColumn(2).Evaluate();
             var X = data.GetColumn(0).Concat(data.GetColumn(1));
+
             var theta = LogisticRegression.Calculate(X, y);
 
             var line = model.Function(x => -(theta[0] + theta[1] * x ) / theta[2],
