@@ -35,6 +35,7 @@
             this.buttonRegression = new System.Windows.Forms.Button();
             this.buttonNewtonBactrack = new System.Windows.Forms.Button();
             this.buttonLogistic = new System.Windows.Forms.Button();
+            this.buttonQuasiNewtonLineSearch = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonBacktrackGradient
@@ -66,7 +67,7 @@
             this.buttonBanana.Name = "buttonBanana";
             this.buttonBanana.Size = new System.Drawing.Size(126, 23);
             this.buttonBanana.TabIndex = 8;
-            this.buttonBanana.Text = "Quasi Newton";
+            this.buttonBanana.Text = "Quasi Newton (B)";
             this.buttonBanana.UseVisualStyleBackColor = true;
             this.buttonBanana.Click += new System.EventHandler(this.buttonBanana_Click);
             // 
@@ -106,7 +107,7 @@
             // buttonLogistic
             // 
             this.buttonLogistic.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonLogistic.Location = new System.Drawing.Point(54, 233);
+            this.buttonLogistic.Location = new System.Drawing.Point(54, 261);
             this.buttonLogistic.Name = "buttonLogistic";
             this.buttonLogistic.Size = new System.Drawing.Size(126, 23);
             this.buttonLogistic.TabIndex = 11;
@@ -114,11 +115,23 @@
             this.buttonLogistic.UseVisualStyleBackColor = true;
             this.buttonLogistic.Click += new System.EventHandler(this.buttonLogistic_Click);
             // 
+            // buttonQuasiNewtonLineSearch
+            // 
+            this.buttonQuasiNewtonLineSearch.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonQuasiNewtonLineSearch.Location = new System.Drawing.Point(54, 233);
+            this.buttonQuasiNewtonLineSearch.Name = "buttonQuasiNewtonLineSearch";
+            this.buttonQuasiNewtonLineSearch.Size = new System.Drawing.Size(126, 23);
+            this.buttonQuasiNewtonLineSearch.TabIndex = 12;
+            this.buttonQuasiNewtonLineSearch.Text = "Quasi Newton (LS)";
+            this.buttonQuasiNewtonLineSearch.UseVisualStyleBackColor = true;
+            this.buttonQuasiNewtonLineSearch.Click += new System.EventHandler(this.buttonQuasiNewtonLineSearch_Click);
+            // 
             // ExerciseSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(235, 305);
+            this.Controls.Add(this.buttonQuasiNewtonLineSearch);
             this.Controls.Add(this.buttonLogistic);
             this.Controls.Add(this.buttonNewtonBactrack);
             this.Controls.Add(this.buttonBacktrackGradient);
@@ -141,5 +154,6 @@
         private System.Windows.Forms.Button buttonNewton;
         private System.Windows.Forms.Button buttonNewtonBactrack;
         private System.Windows.Forms.Button buttonLogistic;
+        private System.Windows.Forms.Button buttonQuasiNewtonLineSearch;
     }
 }

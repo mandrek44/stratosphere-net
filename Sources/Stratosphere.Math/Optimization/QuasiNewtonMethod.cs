@@ -6,6 +6,7 @@ namespace Stratosphere.Math.Optimization
     {
         public double Epsilon { get; } = 0.00001;
         public int MaxIterations { get; }
+        public LineSearchAlgorithm LineSearchAlgorithm { get; set; } = new BacktrackingLineSearch();
 
         public Matrix InitialH { get; set; }
 
@@ -36,7 +37,7 @@ namespace Stratosphere.Math.Optimization
                 var dfx = df(x1);
                 var p = -H * dfx;
 
-                var x2 = BacktrackingLineSearch.Find(f, df, p, x1, dfx).Evaluate();
+                var x2 = LineSearchAlgorithm.Find(f, df, p, x1, dfx).Evaluate();
 
                 if ((x2 - x1).Length < Epsilon)
                     return x1;

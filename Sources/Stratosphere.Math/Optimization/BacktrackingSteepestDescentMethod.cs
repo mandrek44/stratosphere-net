@@ -29,7 +29,7 @@ namespace Stratosphere.Math.Optimization
 
                 var p = -dfx / dfx.Length;
 
-                x = BacktrackingLineSearch.Find(f, df, p, x, dfx).Evaluate();
+                x = new BacktrackingLineSearch().Find(f, df, p, x, dfx).Evaluate();
 
                 Tracker.Track(x);
             }

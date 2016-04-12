@@ -8,14 +8,14 @@ namespace Stratosphere.Math.Regression
     {
         public static Matrix Calculate(Matrix X, Matrix y)
         {
-            X = Matrix.Ones(X.Height, 1)
+            X = Ones(X.Height, 1)
                 .Concat(X)
                 .Evaluate();
 
             return QuasiNewtonMethod.Find(
                 f: theta => _Cost(X, y, theta),
                 df: theta => Gradient(X, y, theta),
-                x0: Matrix.Zeros(X.Width, 1),
+                x0: Zeros(X.Width, 1),
                 maxIterations: 1000);
         }
 
@@ -25,7 +25,7 @@ namespace Stratosphere.Math.Regression
 
         public static double Cost(Matrix X, Matrix y, Matrix theta)
         {
-            return _Cost(Matrix.Ones(X.Height, 1).Concat(X), y, theta);
+            return _Cost(Ones(X.Height, 1).Concat(X), y, theta);
         }
 
         private static double _Cost(Matrix X, Matrix y, Matrix theta)

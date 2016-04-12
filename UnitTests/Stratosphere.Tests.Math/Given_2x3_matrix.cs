@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using NUnit.Framework;
 using Stratosphere.Math;
+using Stratosphere.Math.Regression;
 
 namespace Stratosphere.Tests.Math
 {

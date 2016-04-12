@@ -28,7 +28,7 @@ namespace Stratosphere.Math.Optimization
                 var dfx = df(x);
                 var p = -ddf(x).Inverse()*dfx;
 
-                var x2 = BacktrackingLineSearch.Find(f, df, p, x, dfx).Evaluate();
+                var x2 = new BacktrackingLineSearch().Find(f, df, p, x, dfx).Evaluate();
 
                 Tracker.Track(x2);
 

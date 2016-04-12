@@ -32,7 +32,10 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var form = new FormDataSet();
             form.Display(FormDataSet.PlotBananaFunction(
-                new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500)));
+                new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500)
+                {
+                    LineSearchAlgorithm = new BacktrackingLineSearch()
+                }));
 
             form.ShowDialog();
         }
@@ -75,6 +78,18 @@ namespace Stratosphere.MachineLearning.Studio
         {
             var form = new FormDataSet();
             form.Display(FormDataSet.PlotLogisticRegression());
+
+            form.ShowDialog();
+        }
+
+        private void buttonQuasiNewtonLineSearch_Click(object sender, EventArgs e)
+        {
+            var form = new FormDataSet();
+            form.Display(FormDataSet.PlotBananaFunction(
+                new QuasiNewtonMethod(trackProgres: true, maxIterations: 1500)
+                {
+                    LineSearchAlgorithm = new LineSearch()
+                }));
 
             form.ShowDialog();
         }
