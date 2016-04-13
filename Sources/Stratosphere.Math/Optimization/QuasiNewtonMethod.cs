@@ -39,16 +39,18 @@ namespace Stratosphere.Math.Optimization
 
                 var x2 = LineSearchAlgorithm.Find(f, df, p, x1, dfx).Evaluate();
 
-                if ((x2 - x1).Length < Epsilon)
+                if ((x2 - x1).Length < Epsilon || System.Math.Abs(dfx.Length) < 0.01)
                     return x1;
 
                 Tracker.Track(x1);
 
                 var dfx1 = df(x1);
-                var q = df(x2) - dfx1;
-                var s = x2 - x1;
+                var q = (df(x2) - dfx1).Evaluate();
+                var s = (x2 - x1).Evaluate();
 
-                H = H + (s * s.T) / (q.T * s) - (H * q * q.T * H.T) / (q.T * H * q);
+                //H = (H + (q * q.T) / (q.T * s) - (H * s * s.T * H.T) / (s.T * H * s));
+
+                H = H + (s * s.T) / (s.T * q) - (H * q)*((H*q).T / (q.T * H * q));
 
                 H = H.Evaluate();
                 x1 = x2.Evaluate();

@@ -48,6 +48,8 @@
     <Compile Include="Optimization\IIterationsTracker.cs" />
     <Compile Include="Optimization\IOptimizationMethod.cs" />
     <Compile Include="Optimization\IterationsTracker.cs" />
+    <Compile Include="Optimization\LineSearch.cs" />
+    <Compile Include="Optimization\LineSearchAlgorithm.cs" />
     <Compile Include="Optimization\NewtonMethodWithBacktracking.cs" />
     <Compile Include="Optimization\QuasiNewtonMethod.cs" />
     <Compile Include="Optimization\SimpleNewtonMethod.cs" />
