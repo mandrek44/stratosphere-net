@@ -2,12 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Stratosphere.Math.StronglyTypeMatrix;
 
 namespace Stratosphere.Math
 {
     // TODO: If RowMajorMatrix (or any other version) is implemented, this will need to change as it assumes the indexes are Column Major
     public abstract class Matrix
     {
+        public Vector<D> As<D>() => new Vector<D>(this);
+
+        public Matrix<D1, D2> As<D1, D2>() => new Matrix<D1, D2>(this);
+
         protected const double Tolerance = 0.0001;
         private readonly int[] _dimensions;
 
@@ -47,7 +52,7 @@ namespace Stratosphere.Math
         public virtual Matrix Multiply(double scalar) => Map(v => v * scalar);
 
         public Matrix Transpose() => new TransposedMatrix(this);
-        public Matrix T => Transpose();
+        public virtual Matrix T => Transpose();
 
         public static implicit operator double(Matrix a) => a.EnumerateByColumns().Single();
 
@@ -222,7 +227,7 @@ namespace Stratosphere.Math
 
             if (Width == 1)
             {
-                return Vector(1.0/this[0]);
+                return Vector(1.0 / this[0]);
             }
 
             if (Width == 2)
@@ -230,7 +235,7 @@ namespace Stratosphere.Math
                 var a = this[0, 0];
                 var b = this[0, 1];
                 var c = this[1, 0];
-                var d = this[1 ,1];
+                var d = this[1, 1];
 
                 return Vector(d, -c).Concat(Vector(-b, a)) / (a * d - b * c);
             }

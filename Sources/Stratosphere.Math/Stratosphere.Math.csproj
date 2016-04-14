@@ -55,6 +55,12 @@
     <Compile Include="Optimization\SimpleNewtonMethod.cs" />
     <Compile Include="Regression\LinearRegression.cs" />
     <Compile Include="Regression\LogisticRegression.cs" />
+    <Compile Include="StronglyTypeMatrix\M.cs" />
+    <Compile Include="StronglyTypeMatrix\Matrix.cs" />
+    <Compile Include="StronglyTypeMatrix\N.cs" />
+    <Compile Include="StronglyTypeMatrix\One.cs" />
+    <Compile Include="StronglyTypeMatrix\StronglyTypedMatrixTestUsage.cs" />
+    <Compile Include="StronglyTypeMatrix\Vector.cs" />
     <Compile Include="Utils\ArrayExtension.cs" />
     <Compile Include="Matrix\SingleColumnMatrix.cs" />
     <Compile Include="Optimization\BacktrackingLineSearch.cs" />

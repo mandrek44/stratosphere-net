@@ -1,4 +1,6 @@
 using System;
+using static Stratosphere.Math.Matrix;
+using static System.Math;
 
 namespace Stratosphere.Math.Optimization
 {
@@ -27,7 +29,7 @@ namespace Stratosphere.Math.Optimization
 
         public Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix initial)
         {
-            var H = InitialH ?? Matrix.Identity(initial.Height);
+            var H = InitialH ?? Identity(initial.Height);
 
             Tracker.Track(initial);
 
@@ -39,7 +41,7 @@ namespace Stratosphere.Math.Optimization
 
                 var x2 = LineSearchAlgorithm.Find(f, df, p, x1, dfx).Evaluate();
 
-                if ((x2 - x1).Length < Epsilon || System.Math.Abs(dfx.Length) < 0.01)
+                if ((x2 - x1).Length < Epsilon || Abs(dfx.Length) < 0.01)
                     return x1;
 
                 Tracker.Track(x1);
