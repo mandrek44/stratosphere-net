@@ -1,4 +1,4 @@
-# Fooling around with C# type system
+# Playing with C# type system
 
 The Quasi-Newton method uses quite complex formula for calculating the approximation of second derivative. Implemented in Stratosphere.NET it looks like that:
 
