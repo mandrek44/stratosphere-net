@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Stratosphere.Math.StronglyTypeMatrix;
+using Stratosphere.Math.StronglyTypedMatrix;
 
 namespace Stratosphere.Math
 {

@@ -1,0 +1,4 @@
+namespace Stratosphere.Math.StronglyTypedMatrix
+{
+    
+}

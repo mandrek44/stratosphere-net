@@ -1,4 +1,4 @@
-namespace Stratosphere.Math.StronglyTypeMatrix
+namespace Stratosphere.Math.StronglyTypedMatrix
 {
     public class Vector<D> : Matrix<D, One>
     {

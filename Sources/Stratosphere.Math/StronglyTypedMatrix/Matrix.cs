@@ -1,7 +1,7 @@
-namespace Stratosphere.Math.StronglyTypeMatrix
+namespace Stratosphere.Math.StronglyTypedMatrix
 {
-    public class Matrix<D1, D2>
-    {
+public class Matrix<D1, D2>
+{
         public Matrix Inner { get; }
 
         public Matrix(Matrix inner)
@@ -11,7 +11,9 @@ namespace Stratosphere.Math.StronglyTypeMatrix
 
         public static implicit operator Matrix(Matrix<D1, D2> a) => a.Inner;
 
-        public static Matrix<D1, M> operator *(Matrix<D1, D2> a, Matrix<D2, M> b) => a.Inner.Multiply(b.Inner).As<D1, M>();
+        public static Matrix<D1, n> operator *(Matrix<D1, D2> a, Matrix<D2, n> b) => a.Inner.Multiply(b.Inner).As<D1, n>();
+
+        public static Matrix<D1, p> operator *(Matrix<D1, D2> a, Matrix<D2, p> b) => a.Inner.Multiply(b.Inner).As<D1, p>();
 
         public static Matrix<D1, One> operator *(Matrix<D1, D2> a, Matrix<D2, One> b) => a.Inner.Multiply(b.Inner).As<D1, One>();
 
