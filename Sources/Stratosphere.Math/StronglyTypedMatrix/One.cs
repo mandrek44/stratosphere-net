@@ -1,4 +1,0 @@
-namespace Stratosphere.Math.StronglyTypedMatrix
-{
-    
-}
