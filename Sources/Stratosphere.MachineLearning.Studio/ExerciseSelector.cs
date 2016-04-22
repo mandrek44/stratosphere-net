@@ -93,5 +93,13 @@ namespace Stratosphere.MachineLearning.Studio
 
             form.ShowDialog();
         }
+
+        private void buttonSigmoid_Click(object sender, EventArgs e)
+        {
+            var form = new FormDataSet();
+            form.Display(FormDataSet.Sigmoid());
+
+            form.ShowDialog();
+        }
     }
 }

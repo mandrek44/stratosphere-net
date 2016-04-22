@@ -36,6 +36,7 @@
             this.buttonNewtonBactrack = new System.Windows.Forms.Button();
             this.buttonLogistic = new System.Windows.Forms.Button();
             this.buttonQuasiNewtonLineSearch = new System.Windows.Forms.Button();
+            this.buttonSigmoid = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonBacktrackGradient
@@ -74,7 +75,7 @@
             // buttonXSquared
             // 
             this.buttonXSquared.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.buttonXSquared.Location = new System.Drawing.Point(54, 59);
+            this.buttonXSquared.Location = new System.Drawing.Point(54, 30);
             this.buttonXSquared.Name = "buttonXSquared";
             this.buttonXSquared.Size = new System.Drawing.Size(126, 23);
             this.buttonXSquared.TabIndex = 5;
@@ -126,11 +127,23 @@
             this.buttonQuasiNewtonLineSearch.UseVisualStyleBackColor = true;
             this.buttonQuasiNewtonLineSearch.Click += new System.EventHandler(this.buttonQuasiNewtonLineSearch_Click);
             // 
+            // buttonSigmoid
+            // 
+            this.buttonSigmoid.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonSigmoid.Location = new System.Drawing.Point(54, 59);
+            this.buttonSigmoid.Name = "buttonSigmoid";
+            this.buttonSigmoid.Size = new System.Drawing.Size(126, 23);
+            this.buttonSigmoid.TabIndex = 13;
+            this.buttonSigmoid.Text = "Sigmoid";
+            this.buttonSigmoid.UseVisualStyleBackColor = true;
+            this.buttonSigmoid.Click += new System.EventHandler(this.buttonSigmoid_Click);
+            // 
             // ExerciseSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(235, 305);
+            this.Controls.Add(this.buttonSigmoid);
             this.Controls.Add(this.buttonQuasiNewtonLineSearch);
             this.Controls.Add(this.buttonLogistic);
             this.Controls.Add(this.buttonNewtonBactrack);
@@ -155,5 +168,6 @@
         private System.Windows.Forms.Button buttonNewtonBactrack;
         private System.Windows.Forms.Button buttonLogistic;
         private System.Windows.Forms.Button buttonQuasiNewtonLineSearch;
+        private System.Windows.Forms.Button buttonSigmoid;
     }
 }

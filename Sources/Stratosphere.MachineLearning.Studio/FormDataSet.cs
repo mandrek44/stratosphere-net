@@ -54,6 +54,17 @@ namespace Stratosphere.MachineLearning.Studio
             return model;
         }
 
+        public static PlotModel Sigmoid()
+        {
+            var model = new PlotModel { Title = "S(t)", LegendFontSize = 20.5, LegendPosition = LegendPosition.TopCenter };
+            var yAxis = new LinearAxis {PositionAtZeroCrossing = true};
+            model.Axes.Add(yAxis);
+
+            model.Function(LogisticRegression.Sigmoid, -5, 5);
+
+            return model;
+        }
+
         public static PlotModel RegressionTests()
         {
             var planetsData = ColumnMajorMatrix.Parse(File.ReadAllText(@"DataSets\swapi_planets_filtered.txt"));
