@@ -33,6 +33,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.3.1.7705, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\graphviz4net\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Graphviz4Net">
+      <HintPath>..\libs\graphviz4net\Graphviz4Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Graphviz4Net.WPF">
+      <HintPath>..\libs\graphviz4net\Graphviz4Net.WPF.dll</HintPath>
+    </Reference>
     <Reference Include="OxyPlot, Version=1.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
       <HintPath>..\packages\OxyPlot.Core.1.0.0-unstable2060\lib\net45\OxyPlot.dll</HintPath>
       <Private>True</Private>
