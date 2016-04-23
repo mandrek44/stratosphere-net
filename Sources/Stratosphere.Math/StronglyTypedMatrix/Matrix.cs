@@ -11,6 +11,8 @@ public class Matrix<D1, D2>
 
         public static implicit operator Matrix(Matrix<D1, D2> a) => a.Inner;
 
+        public static Matrix<D1, m> operator *(Matrix<D1, D2> a, Matrix<D2, m> b) => a.Inner.Multiply(b.Inner).As<D1, m>();
+
         public static Matrix<D1, n> operator *(Matrix<D1, D2> a, Matrix<D2, n> b) => a.Inner.Multiply(b.Inner).As<D1, n>();
 
         public static Matrix<D1, p> operator *(Matrix<D1, D2> a, Matrix<D2, p> b) => a.Inner.Multiply(b.Inner).As<D1, p>();

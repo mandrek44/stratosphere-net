@@ -1,4 +1,5 @@
 using Stratosphere.Math.Optimization;
+using Stratosphere.Math.StronglyTypedMatrix;
 using static System.Math;
 using static Stratosphere.Math.Matrix;
 
@@ -22,6 +23,8 @@ namespace Stratosphere.Math.Regression
         public static double Sigmoid(double x) => 1.0 / (1.0 + Exp(-x));
 
         public static Matrix Sigmoid(Matrix x) => x.Map(Sigmoid);
+
+        public static Matrix<D1,D2> Sigmoid<D1, D2>(Matrix<D1, D2> x) => x.Inner.Map(Sigmoid).As<D1,D2>();
 
         public static double Cost(Matrix X, Matrix y, Matrix theta)
         {
