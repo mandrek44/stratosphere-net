@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stratosphere.Tests.Math", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stratosphere.MachineLearning.Studio", "Stratosphere.MachineLearning.Studio\Stratosphere.MachineLearning.Studio.csproj", "{EA6BE691-FBEA-4002-9C97-50A733FD7538}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stratosphere.MachineLearning.Studio.Graphs", "Stratosphere.MachineLearning.Studio.Graphs\Stratosphere.MachineLearning.Studio.Graphs.csproj", "{39B3181F-E1BB-4972-9C5A-C9945F122F11}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{EA6BE691-FBEA-4002-9C97-50A733FD7538}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA6BE691-FBEA-4002-9C97-50A733FD7538}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA6BE691-FBEA-4002-9C97-50A733FD7538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39B3181F-E1BB-4972-9C5A-C9945F122F11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39B3181F-E1BB-4972-9C5A-C9945F122F11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39B3181F-E1BB-4972-9C5A-C9945F122F11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39B3181F-E1BB-4972-9C5A-C9945F122F11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

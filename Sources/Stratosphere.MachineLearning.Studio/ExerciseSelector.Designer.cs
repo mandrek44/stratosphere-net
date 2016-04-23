@@ -37,6 +37,7 @@
             this.buttonLogistic = new System.Windows.Forms.Button();
             this.buttonQuasiNewtonLineSearch = new System.Windows.Forms.Button();
             this.buttonSigmoid = new System.Windows.Forms.Button();
+            this.buttonGraph = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonBacktrackGradient
@@ -138,11 +139,23 @@
             this.buttonSigmoid.UseVisualStyleBackColor = true;
             this.buttonSigmoid.Click += new System.EventHandler(this.buttonSigmoid_Click);
             // 
+            // buttonGraph
+            // 
+            this.buttonGraph.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.buttonGraph.Location = new System.Drawing.Point(54, 290);
+            this.buttonGraph.Name = "buttonGraph";
+            this.buttonGraph.Size = new System.Drawing.Size(126, 23);
+            this.buttonGraph.TabIndex = 14;
+            this.buttonGraph.Text = "Show Graph";
+            this.buttonGraph.UseVisualStyleBackColor = true;
+            this.buttonGraph.Click += new System.EventHandler(this.buttonGraph_Click);
+            // 
             // ExerciseSelector
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(235, 305);
+            this.ClientSize = new System.Drawing.Size(235, 342);
+            this.Controls.Add(this.buttonGraph);
             this.Controls.Add(this.buttonSigmoid);
             this.Controls.Add(this.buttonQuasiNewtonLineSearch);
             this.Controls.Add(this.buttonLogistic);
@@ -169,5 +182,6 @@
         private System.Windows.Forms.Button buttonLogistic;
         private System.Windows.Forms.Button buttonQuasiNewtonLineSearch;
         private System.Windows.Forms.Button buttonSigmoid;
+        private System.Windows.Forms.Button buttonGraph;
     }
 }

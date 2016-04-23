@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Stratosphere.Math.Formulas;
 using Stratosphere.Math.Optimization;
+using Stratosphere.Math.Regression;
 
 namespace Stratosphere.MachineLearning.Studio
 {
@@ -100,6 +101,11 @@ namespace Stratosphere.MachineLearning.Studio
             form.Display(FormDataSet.Sigmoid());
 
             form.ShowDialog();
+        }
+
+        private void buttonGraph_Click(object sender, EventArgs e)
+        {
+            new GraphVisualisation().ShowDialog();
         }
     }
 }
