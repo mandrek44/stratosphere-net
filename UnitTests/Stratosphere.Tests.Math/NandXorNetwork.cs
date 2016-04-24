@@ -32,6 +32,8 @@ namespace Stratosphere.Tests.Math
 
             var result = FeedforwardXor(x);
 
+            Console.WriteLine($"Cost = {_Cost(result.As<One, k>(), Matrix.Vector(0, 1, 1, 0).As<k>().T)}");
+
             MatrixAssert.AreEqual("0, 1, 1, 0", result);
         }
 
@@ -56,35 +58,28 @@ namespace Stratosphere.Tests.Math
             Matrix<p, k> a3 = Sigmoid(theta2.T * a2.Prepend(1));
             Matrix<One, k> a4 = Sigmoid(theta3.T * a3.Prepend(1));
 
+            
+
             return a4.Inner;
         }
 
-        //private static double _Cost(Matrix<m, k> X, Matrix<One, k> y, Func<Matrix<m, k>, Matrix<One, k>> neuralNetwork)
-        //{
-        //    Matrix<One, k> networkOutput = neuralNetwork(X);
+        private static double _Cost(Matrix<One, k> networkOutput, Matrix<One, k> y)
+        {
+            int k = networkOutput.Width;
 
+            var t1 = y.MultiplyEach(Log(networkOutput));
+            var t2 = (1 - y).MultiplyEach(Log(1 - networkOutput));
+            Matrix<One, k> temp = t1 + t2;
 
-        //    Matrix<One, k> t1 = Log(networkOutput) + Log(1 - networkOutput);
-
-        //    t1.Inner.Sum(0);
-        //    return 0;
-
-        //    //for (int k = 0; k < networkOutput.Height; ++k)
-        //    //{
-        //    //    var h = networkOutput[k];
-
-        //    //    return (
-        //    //        -y.MultiplyEach(h.Map(v => Log(NonZero(v))))
-        //    //        - (1 - y).MultiplyEach((1 - h).Map(v => Log(NonZero(v))))).Sum() / m;
-        //    //}
-        //}
+            return (temp.SumColumns().SumRows() * (-1.0 / k)).Inner;
+        }
 
         private static double NonZero(double v)
         {
             return v == 0 ? 0.00000001 : v;
         }
 
-        private static Matrix Log(Matrix m) => m.Map(v => System.Math.Log(v));
+        private static Matrix Log(Matrix m) => m.Map(v => System.Math.Log(NonZero(v)));
 
         private static Matrix<D1, D2> Log<D1, D2>(Matrix<D1, D2> m) => Log(m.Inner).As<D1, D2>();
     }

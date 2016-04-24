@@ -29,7 +29,19 @@ namespace Stratosphere.Math.StronglyTypedMatrix
 
         public static Matrix<D1, D2> operator /(Matrix<D1, D2> a, Matrix<One, One> scalar) => a.Inner.Map(v => v / scalar.Inner).As<D1, D2>();
 
+        public static Matrix<D1, D2> operator *(Matrix<D1, D2> a, Matrix<One, One> scalar) => a.Inner.Map(v => v * scalar.Inner).As<D1, D2>();
+
+        public static Matrix<D1, D2> operator *(Matrix<D1, D2> a, double scalar) => a.Inner.Map(v => v * scalar).As<D1, D2>();
+
         public Matrix<D2, D1> T => Inner.Transpose().As<D2, D1>();
+
+        public Matrix<D1, D2> MultiplyEach(Matrix<D1, D2> matrix) => Inner.MultiplyEach(matrix).As<D1, D2>();
+
+        public Matrix<One, D2> SumColumns() => Inner.Sum(0).As<One, D2>();
+
+        public Matrix<D1, One> SumRows() => Inner.Sum(1).As<D1, One>();
+
+        public double Sum() => Inner.Sum();
 
         public int Height => Inner.Height;
         public int Width => Inner.Width;
