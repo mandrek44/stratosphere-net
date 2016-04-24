@@ -54,11 +54,62 @@ namespace Stratosphere.Tests.Math
 
             var a1 = x.As<m, k>();
 
-            Matrix<n, k> a2 = Sigmoid(theta1.T * a1.Prepend(1));
-            Matrix<p, k> a3 = Sigmoid(theta2.T * a2.Prepend(1));
-            Matrix<One, k> a4 = Sigmoid(theta3.T * a3.Prepend(1));
+            var z2 = theta1.T * a1.Prepend(1);
+            Matrix<n, k> a2 = Sigmoid(z2);
 
-            
+            var z3 = theta2.T * a2.Prepend(1);
+            Matrix<p, k> a3 = Sigmoid(z3);
+
+            var z4 = theta3.T * a3.Prepend(1);
+            Matrix<One, k> a4 = Sigmoid(z4);
+
+
+
+            return a4.Inner;
+        }
+
+        private static Matrix FeedforwardXor_Gradient(Matrix x, Matrix y)
+        {
+            var theta1_1 = Matrix.Vector(-10, 20, 0);
+            var theta1_2 = Matrix.Vector(30, -20, -20);
+            var theta1_3 = Matrix.Vector(-10, 0, 20);
+
+            var theta2_1 = Matrix.Vector(30, -20, -20, 0);
+            var theta2_2 = Matrix.Vector(30, 0, -20, -20);
+
+            var theta3_1 = Matrix.Vector(30, -20, -20);
+
+            Matrix<m, n> theta1 = theta1_1.Concat(theta1_2).Concat(theta1_3).Evaluate().As<m, n>();
+            Matrix<n, p> theta2 = theta2_1.Concat(theta2_2).Evaluate().As<n, p>();
+            Matrix<p, One> theta3 = theta3_1.As<p, One>();
+
+            var k = x.Width;
+            Matrix<m, k> a1 = x.As<m, k>();
+
+            Matrix<n, k> z2 = theta1.T * a1.Prepend(1);
+            Matrix<n, k> a2 = Sigmoid(z2);
+
+            Matrix<p, k> z3 = theta2.T * a2.Prepend(1);
+            Matrix<p, k> a3 = Sigmoid(z3);
+
+            Matrix<One, k> z4 = theta3.T * a3.Prepend(1);
+            Matrix<One, k> a4 = Sigmoid(z4);
+
+            Matrix<One, k> delta4 = a4 - y.As<One, k>();
+
+            // TODO: Remove the bias units before multiplying
+            Matrix<p, k> delta3 = (theta3 * delta4).MultiplyEach(SigmoidDerivative(z3));
+            Matrix<n, k> delta2 = (theta2 * delta3).MultiplyEach(SigmoidDerivative(z2));
+
+            Matrix<m, n> dJ1 = Matrix.Zeros(theta1.Size).As<m, n>();
+            Matrix<n, p> dJ2 = Matrix.Zeros(theta2.Size).As<n, p>();
+            Matrix<p, One> dJ3 = Matrix.Zeros(theta2.Size).As<p, One>();
+            for (var i = 0; i < k; ++i)
+            {
+                dJ1 += a1.GetColumn(0) * delta2.GetColumn(0).T;
+                dJ2 += a2.GetColumn(0) * delta3.GetColumn(0).T;
+                dJ3 += a3.GetColumn(0) * delta4.GetColumn(0).T;
+            }
 
             return a4.Inner;
         }
@@ -78,6 +129,10 @@ namespace Stratosphere.Tests.Math
         {
             return v == 0 ? 0.00000001 : v;
         }
+
+        public static Matrix SigmoidDerivative(Matrix m) => Sigmoid(m).MultiplyEach(1 - Sigmoid(m));
+
+        public static Matrix<D1, D2> SigmoidDerivative<D1, D2>(Matrix<D1, D2> m) => SigmoidDerivative(m.Inner).As<D1, D2>();
 
         private static Matrix Log(Matrix m) => m.Map(v => System.Math.Log(NonZero(v)));
 

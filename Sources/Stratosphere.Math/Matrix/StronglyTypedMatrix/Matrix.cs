@@ -46,5 +46,7 @@ namespace Stratosphere.Math.StronglyTypedMatrix
         public int Height => Inner.Height;
         public int Width => Inner.Width;
         public int[] Size => Inner.Size;
+
+        public Matrix<D1, One> GetColumn(int i) => Inner.GetColumn(i).As<D1, One>();
     }
 }
