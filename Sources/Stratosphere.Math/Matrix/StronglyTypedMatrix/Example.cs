@@ -3,6 +3,7 @@ namespace Stratosphere.Math.StronglyTypedMatrix
     public class m { }
     public class n { }
     public class p { }
+    public class k { }
     public class One { }
 
     public class Example

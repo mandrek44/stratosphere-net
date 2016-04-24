@@ -45,11 +45,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Given_2x3_matrix.cs" />
+    <Compile Include="Given_column_summed_matrix.cs" />
     <Compile Include="Given_concated_matrix.cs" />
     <Compile Include="Given_matrix_minus_matrix.cs" />
     <Compile Include="Given_matrix_multiplied_element_wise_by_matrix.cs" />
     <Compile Include="Given_matrix_plus_matrix.cs" />
+    <Compile Include="Given_prepended_matrix.cs" />
     <Compile Include="Given_retrieved_column.cs" />
+    <Compile Include="Given_row_summed_matrix.cs" />
     <Compile Include="Given_scalar_multiplied_matrix.cs" />
     <Compile Include="Given_simple_optimization_problem.cs" />
     <Compile Include="Given_single_element_matrix.cs" />
