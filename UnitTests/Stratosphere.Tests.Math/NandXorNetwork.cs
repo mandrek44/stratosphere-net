@@ -34,6 +34,8 @@ namespace Stratosphere.Tests.Math
 
             Console.WriteLine($"Cost = {_Cost(result.As<One, k>(), Matrix.Vector(0, 1, 1, 0).As<k>().T)}");
 
+            FeedforwardXor_Gradient(x, "0, 1, 1, 0");
+
             MatrixAssert.AreEqual("0, 1, 1, 0", result);
         }
 
@@ -97,18 +99,18 @@ namespace Stratosphere.Tests.Math
 
             Matrix<One, k> delta4 = a4 - y.As<One, k>();
 
-            // TODO: Remove the bias units before multiplying
-            Matrix<p, k> delta3 = (theta3 * delta4).MultiplyEach(SigmoidDerivative(z3));
-            Matrix<n, k> delta2 = (theta2 * delta3).MultiplyEach(SigmoidDerivative(z2));
+            // Remove the bias units in thetas
+            Matrix<p, k> delta3 = (theta3.RemoveFirstRow() * delta4).MultiplyEach(SigmoidDerivative(z3));
+            Matrix<n, k> delta2 = (theta2.RemoveFirstRow() * delta3).MultiplyEach(SigmoidDerivative(z2));
 
-            Matrix<m, n> dJ1 = Matrix.Zeros(theta1.Size).As<m, n>();
-            Matrix<n, p> dJ2 = Matrix.Zeros(theta2.Size).As<n, p>();
-            Matrix<p, One> dJ3 = Matrix.Zeros(theta2.Size).As<p, One>();
+            Matrix<m, n> dJ1 = Matrix.Zeros(theta1.RemoveFirstRow().Size).As<m, n>();
+            Matrix<n, p> dJ2 = Matrix.Zeros(theta2.RemoveFirstRow().Size).As<n, p>();
+            Matrix<p, One> dJ3 = Matrix.Zeros(theta3.RemoveFirstRow().Size).As<p, One>();
             for (var i = 0; i < k; ++i)
             {
-                dJ1 += a1.GetColumn(0) * delta2.GetColumn(0).T;
-                dJ2 += a2.GetColumn(0) * delta3.GetColumn(0).T;
-                dJ3 += a3.GetColumn(0) * delta4.GetColumn(0).T;
+                dJ1 += a1.GetColumn(i) * delta2.GetColumn(i).T;
+                dJ2 += a2.GetColumn(i) * delta3.GetColumn(i).T;
+                dJ3 += a3.GetColumn(i) * delta4.GetColumn(i).T;
             }
 
             return a4.Inner;
@@ -125,10 +127,7 @@ namespace Stratosphere.Tests.Math
             return (temp.SumColumns().SumRows() * (-1.0 / k)).Inner;
         }
 
-        private static double NonZero(double v)
-        {
-            return v == 0 ? 0.00000001 : v;
-        }
+        private static double NonZero(double v) => v == 0 ? 0.0000000001 : v;
 
         public static Matrix SigmoidDerivative(Matrix m) => Sigmoid(m).MultiplyEach(1 - Sigmoid(m));
 

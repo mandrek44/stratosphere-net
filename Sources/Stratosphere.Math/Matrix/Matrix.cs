@@ -356,6 +356,8 @@ namespace Stratosphere.Math
 
             return new ColumnMajorMatrix(identity, new[] { rank, rank });
         }
+
+        public Matrix RemoveFirstRow() => new RemovedFirstRowMatrix(this);
     }
 
 }

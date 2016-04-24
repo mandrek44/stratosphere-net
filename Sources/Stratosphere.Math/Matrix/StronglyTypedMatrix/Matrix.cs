@@ -48,5 +48,9 @@ namespace Stratosphere.Math.StronglyTypedMatrix
         public int[] Size => Inner.Size;
 
         public Matrix<D1, One> GetColumn(int i) => Inner.GetColumn(i).As<D1, One>();
+
+        public Matrix<D1, D2> RemoveFirstRow() => Inner.RemoveFirstRow().As<D1, D2>();
+
+        public override string ToString() => Inner.ToString();
     }
 }
