@@ -5,7 +5,7 @@ namespace Stratosphere.Math.StronglyTypedMatrix
     public class p { }
     public class One { }
 
-    public class StronglyTypedMatrixTestUsage
+    public class Example
     {
         public void Test()
         {
