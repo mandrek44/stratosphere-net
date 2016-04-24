@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Stratosphere.Math;
 
 namespace Stratosphere.Tests.Math
 {
@@ -19,6 +20,16 @@ namespace Stratosphere.Tests.Math
         {
             _matrix = TestMatrix.Data.RemoveFirstRow();
             _expectedMatrix = "1 3 5";
+        }
+    }
+
+    public class Given_unrolled_matrix : Given_transformed_matrix
+    {
+        [SetUp]
+        public void When_transforming()
+        {
+            _matrix = new UnrolledMatrix(TestMatrix.Data, "10 20 30 40");
+            _expectedMatrix = "0;2;4;1;3;5;10;20;30;40";
         }
     }
 }

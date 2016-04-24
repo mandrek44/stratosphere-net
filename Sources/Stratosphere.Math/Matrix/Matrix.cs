@@ -148,7 +148,7 @@ namespace Stratosphere.Math
             return new ColumnMajorMatrix(maxes, dimension == 0 ? new[] { 1, _dimensions[1] } : new[] { _dimensions[0], 1 });
         }
 
-        public Matrix Evaluate()
+        public virtual Matrix Evaluate()
         {
             var result = new double[Size.Product()];
             int i = 0;

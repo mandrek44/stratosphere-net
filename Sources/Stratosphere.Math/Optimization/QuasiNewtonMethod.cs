@@ -26,7 +26,7 @@ namespace Stratosphere.Math.Optimization
         {
             return new QuasiNewtonMethod(maxIterations).Find(f, df, x0);
         }
-
+        
         public Matrix Find(Func<Matrix, double> f, Func<Matrix, Matrix> df, Matrix initial)
         {
             var H = InitialH ?? Identity(initial.Height);
@@ -41,7 +41,7 @@ namespace Stratosphere.Math.Optimization
 
                 var x2 = LineSearchAlgorithm.Find(f, df, p, x1, dfx).Evaluate();
 
-                if ((x2 - x1).Length < Epsilon || Abs(dfx.Length) < 0.01)
+                if ((x2 - x1).Length < Epsilon || Abs(dfx.Length) < 0.001)
                     return x1;
 
                 Tracker.Track(x1);
