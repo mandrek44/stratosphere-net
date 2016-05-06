@@ -46,6 +46,7 @@
     <Compile Include="Matrix\RowFilteredMatrix.cs" />
     <Compile Include="Matrix\SingleRowMatrix.cs" />
     <Compile Include="Matrix\UnrolledMatrix.cs" />
+    <Compile Include="NeuralNetwork\TrainableNeuralNetwork.cs" />
     <Compile Include="Optimization\EmptyIterationsTracker.cs" />
     <Compile Include="Optimization\IIterationsTracker.cs" />
     <Compile Include="Optimization\IOptimizationMethod.cs" />
