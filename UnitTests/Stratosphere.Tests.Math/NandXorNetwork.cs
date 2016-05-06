@@ -33,8 +33,10 @@ namespace Stratosphere.Tests.Math
             return xorNetwork.Activations.Last() > 0.5 ? 1 : 0;
         }
 
-        [Test]
-        public void XOR_TrainableNetwork()
+        [TestCase(2, 3, 2, 1)]
+        [TestCase(2, 2, 1)]
+        [TestCase(2, 4, 1)]
+        public void XOR_TrainableNetwork(params int[] layers)
         {
             var traingData = Vector(0, 0)
                 .Concat(Vector(0, 1))
@@ -45,13 +47,13 @@ namespace Stratosphere.Tests.Math
             var X = traingData.Evaluate();
             var Y = traingOutput.Evaluate();
 
-            var xorNetwork = new TrainableNeuralNetwork(2, 3, 2, 1);
+            var xorNetwork = new TrainableNeuralNetwork(layers);
             xorNetwork.Train(X, Y);
 
             Console.WriteLine($"Learned Cost = {xorNetwork.Cost}");
             Console.WriteLine($"Learned parameters: {new UnrolledMatrix(xorNetwork.Thetas)}");
 
-            MatrixAssert.AreEqual(Y, xorNetwork.Activations.Last());
+            MatrixAssert.AreEqual("0, 1, 1, 0", xorNetwork.Output);
         }
     }
 }

@@ -18,6 +18,8 @@ namespace Stratosphere.Math.NeuralNetwork
 
         public Matrix[] Activations { get; private set; }
 
+        public Matrix Output => Activations.Last();
+
         public double Cost { get; private set; }
 
         public void Train(Matrix X, Matrix Y)
